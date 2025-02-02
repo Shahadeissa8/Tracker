@@ -1,0 +1,76 @@
+﻿@model RegisterViewModel
+@{
+	ViewData["Title"] = "Register";
+}
+
+<h1>Register </h1>
+<form method="post" asp-action="Register" enctype="multipart/form-data">
+	<table class="table table-bordered">
+		<div asp-validation-summary="All" class="text-danger"></div>
+		<tr>
+			<th><label asp-for="Name">Enter your name</label></th>
+			<td>
+				<input asp-for="Name" class="form-control" />
+				<span asp-validation-for="Name" class="text text-danger"></span>
+			</td>
+		</tr>
+		<tr>
+			<th><label asp-for="Email">Enter your email</label></th>
+			<td>
+				<input asp-for="Email" class="form-control" />
+				<span asp-validation-for="Email" class="text text-danger"></span>
+			</td>
+		</tr>
+		<tr>
+			<th><label asp-for="ConfirmEmail">Enter your email confirmation</label></th>
+			<td>
+				<input asp-for="ConfirmEmail" class="form-control" />
+				<span asp-validation-for="ConfirmEmail" class="text text-danger"></span>
+			</td>
+		</tr>
+		<tr>
+			<th><label asp-for="Password">Enter your password</label></th>
+			<td>
+				<input asp-for="Password" class="form-control" />
+				<span asp-validation-for="Password" class="text text-danger"></span>
+			</td>
+		</tr>
+		<tr>
+			<th><label asp-for="ConfirmPassword">Enter your password confirmation</label></th>
+			<td>
+				<input asp-for="ConfirmPassword" class="form-control" />
+				<span asp-validation-for="ConfirmPassword" class="text text-danger"></span>
+			</td>
+		</tr>
+		<tr>
+			<th><label asp-for="Mobile">Enter your Mobile</label></th>
+			<td>
+				<input asp-for="Mobile" class="form-control" />
+				<span asp-validation-for="Mobile" class="text text-danger"></span>
+			</td>
+		</tr>
+		<tr>
+			<th><label asp-for="Gender">Select Gender</label></th>
+			<td>
+				<select  asp-for="Gender" class="form-control" asp-items="@Html.GetEnumSelectList<EnumsList.Genders>()">
+				<option value="-1">---Select Gender---</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<th><label asp-for="ProfileImage">Upload</label></th>
+			<td>
+				<input asp-for="ProfileImage" type="file" class="form-control" />
+				<span asp-validation-for="ProfileImage" class="text text-danger"></span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<input type="submit" value="Register" class="btn custom-success text-black" />
+				<a asp-action="Login" asp-controller="Account" class="btn custom-success text-black">I have an account</a>
+				<a asp-action="Index" asp-controller="Home" class="btn custom-danger text-black">Cancel</a>
+			</td>
+		</tr>
+	</table>
+</form>
+
