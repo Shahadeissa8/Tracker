@@ -12,8 +12,8 @@ using Tracker.Data;
 namespace Tracker.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250202101217_Sec")]
-    partial class Sec
+    [Migration("20250203112004_categoryNameRemovedFromBudget")]
+    partial class categoryNameRemovedFromBudget
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -238,15 +238,15 @@ namespace Tracker.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("CategoryName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Categories")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("RemainingAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("BudgetId");
 
@@ -262,6 +262,9 @@ namespace Tracker.Migrations
                     b.Property<int>("BudgetId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Categories")
+                        .HasColumnType("int");
+
                     b.Property<int>("Curency")
                         .HasColumnType("int");
 
@@ -271,11 +274,19 @@ namespace Tracker.Migrations
                     b.Property<DateTime>("ExpenseDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("ExpenseDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExpenseName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool?>("Recurring")
                         .HasColumnType("bit");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ExpenseId");
 

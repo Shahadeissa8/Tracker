@@ -259,6 +259,9 @@ namespace Tracker.Migrations
                     b.Property<int>("BudgetId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Categories")
+                        .HasColumnType("int");
+
                     b.Property<int>("Curency")
                         .HasColumnType("int");
 

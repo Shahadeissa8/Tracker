@@ -8,18 +8,18 @@ namespace Tracker.Models.ViewModels
     public class ExpenseViewModel
     {
         public Guid ExpenseId { get; set; }
-
+        [Required(ErrorMessage = "Enter The Name")]
+        public string  ExpenseName { get; set; }
         [Required(ErrorMessage = "Enter The Amount")]
         public decimal ExpenseAmount { get; set; }
+        [Required(ErrorMessage = "Enter The Date")]
         public DateTime ExpenseDate { get; set; }
 
         [Required(ErrorMessage = "Choose a currency")]
         public Currencies Curency { get; set; }
-        public bool? Recurring { get; set; }
-        [ForeignKey("ApplicationUser")]
-        public int UserId { get; set; }
-        [ForeignKey("Budget")]
-        public int BudgetId { get; set; }
+        public bool Recurring { get; set; }
+        public string ExpenseDescription { get; set; }
+        public Category Categories { get; set; }
 
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Tracker.Data;
 using Tracker.Models;
 using Tracker.Models.ViewModels;
+using System.Security.Claims;
 
 namespace Tracker.Controllers
 {
@@ -29,16 +30,25 @@ namespace Tracker.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult AddExpense(Expense model)
+        public IActionResult AddExpense(ExpenseViewModel model)
         {
             if (ModelState.IsValid)
             {
+                var userId = userManager.GetUserId(User);  
+
+                if (userId == null)
+                {
+                    return RedirectToAction("Login", "Account"); 
+                }
                 Expense expenses = new Expense()
                 {
+                    ExpenseName = model.ExpenseName,
                     ExpenseAmount = model.ExpenseAmount,
                     ExpenseDate = model.ExpenseDate,
                     Curency = model.Curency,
+                    Categories = model.Categories,
                     Recurring = model.Recurring,
+                    UserId = userId  
                 };
                 db.Expenses.Add(expenses);
                 db.SaveChanges();
@@ -92,21 +102,10 @@ namespace Tracker.Controllers
                 FindExpense = FindExpense.Where(Exp => Exp.ExpenseDate.Date >= model.FromDate && Exp.ExpenseDate.Date <= model.ToDate).ToList();
             }
 
-            var search = new SearchViewModel()
-            {
-                ExpensesList = FindExpense.OrderByDescending(Exp => Exp.ExpenseDate).ToList()
-            };//to write everything in the view in a descending based on date
-            return View(search);
+            //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var latestExpenses =await db.Expenses.Where(e=>e.UserId == userId).OrderByDescending(Exp => Exp.ExpenseDate).ToListAsync();
+            return View(latestExpenses);
         }
-        public IActionResult FilterByCategory(Budget model)
-        {
-            var FindExpense =  db.Expenses.Where(Exp => Exp.UserId == UserId); //change my transaction to the view expenses from mohammad
-            if (model.Categories != null && !model.Categories.Equals("All"))
-            {
-                FindExpense = FindExpense.Where(Exp => Exp.Category.ToString().Equals(model.Categories)).ToList();
-
-            }
-            return View();
-        }
+        
     }
 }

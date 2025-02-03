@@ -12,8 +12,8 @@ using Tracker.Data;
 namespace Tracker.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250203053606_third")]
-    partial class third
+    [Migration("20250203111800_Initial-mig")]
+    partial class Initialmig
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -241,11 +241,15 @@ namespace Tracker.Migrations
                     b.Property<int>("Categories")
                         .HasColumnType("int");
 
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("RemainingAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("BudgetId");
 
@@ -259,6 +263,9 @@ namespace Tracker.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("BudgetId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Categories")
                         .HasColumnType("int");
 
                     b.Property<int>("Curency")

@@ -20,6 +20,6 @@ namespace Tracker.Models
         public int BudgetId { get; set; }
         public string ExpenseName { get; set; }
         public string? ExpenseDescription { get; set; }
-
+        public Category Categories { get; set; }
     }
 }

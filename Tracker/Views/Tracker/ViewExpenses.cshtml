@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Expense>
+@{
+	ViewData["Title"] = "ViewExpenses";
+}
+
+<h1>ViewExpenses</h1>
+
+
+<table class="table table-bordered">
+	<tr>
+		<th>Name of expense</th>
+		<th>Expense Amount</th>
+		<th>Date of expense</th>
+		<th>Currency</th>
+		<th>Expense Discription</th>
+	</tr>
+	@foreach (var expense in Model)
+	{
+		<tr>
+			<td>@expense.ExpenseName</td>
+			<td>@expense.ExpenseAmount</td>
+			<td>@expense.ExpenseDate</td>
+			<td>@expense.Curency</td>
+			<td>@expense.ExpenseDescription</td>
+
+		</tr>
+	}
+</table>
+
+<a href="@Url.Action("Index", "Tracker")" class="btn btn-secondary">Back to Home</a>
