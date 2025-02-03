@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Tracker.Controllers
 {
-   // [Authorize]
+    // [Authorize]
     public class AccountController : Controller
     {
         private UserManager<ApplicationUser> userManager;
@@ -35,10 +35,11 @@ namespace Tracker.Controllers
                 string uniqueFileName = UploadedFile(model);
                 ApplicationUser user = new ApplicationUser()
                 {
-                    UserName = model.Name,
+                    Name = model.Name,
+                    UserName = model.Email,
                     Email = model.Email,
                     PhoneNumber = model.Mobile,
-                    Gender= model.Gender,
+                    Gender = model.Gender,
                     ProfilePicture = uniqueFileName
                 };
                 var result = await userManager.CreateAsync(user, model.Password);
@@ -97,46 +98,91 @@ namespace Tracker.Controllers
             return uniqueFileName;
         }
 
-        //public async Task<IActionResult> Profile(string searchString, DateTime? startDate, DateTime? endDate, decimal? minAmount, decimal? maxAmount)
-        //{
-        //    var user = await _userManager.GetUserAsync(User);
-        //    if (user == null)
-        //    {
-        //        return RedirectToAction("Login");
-        //    }
 
-        //    var transactions = _context.Transactions.Include(t => t.Receiver).Where(t => t.UserId == user.Id);
 
-        //    if (!string.IsNullOrEmpty(searchString))
-        //    {
-        //        transactions = transactions.Where(t => t.Amount.ToString().Contains(searchString) || t.Date.ToString("g").Contains(searchString));
-        //    }
 
-        //    if (startDate.HasValue)
-        //    {
-        //        transactions = transactions.Where(t => t.Date >= startDate.Value);
-        //    }
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            if (!User.Identity.IsAuthenticated || !signInManager.IsSignedIn(User))
+            {
+                RedirectToAction("Login");
+            }
 
-        //    if (endDate.HasValue)
-        //    {
-        //        transactions = transactions.Where(t => t.Date <= endDate.Value);
-        //    }
+            return View();
+        }
+        public async Task<IActionResult> EditProfile(string? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("Login");
+            }
+            var user = await userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+            UpdateViewModel model = new UpdateViewModel()
+            {
+                Name = user.Name,
+                Email = user.Email
+            };
+            return View(model);
+        }
 
-        //    if (minAmount.HasValue)
-        //    {
-        //        transactions = transactions.Where(t => t.Amount >= minAmount.Value);
-        //    }
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> EditProfile(string id, UpdateViewModel model, IFormFile ProfileImage)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await userManager.FindByIdAsync(id);
+                if (user == null)
+                {
+                    return RedirectToAction("Login");
+                }
 
-        //    if (maxAmount.HasValue)
-        //    {
-        //        transactions = transactions.Where(t => t.Amount <= maxAmount.Value);
-        //    }
+                
+                user.Email = model.Email;
 
-        //    var filteredTransactions = await transactions.ToListAsync();
+                if (ProfileImage != null)
+                {
+                    string uniqueFileName = UploadedFile(ProfileImage);
+                    user.ProfilePicture = uniqueFileName;
+                }
 
-        //    return View(filteredTransactions);
-        //}
+                var result = await userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Profile");
+                }
 
-        //hiiiiiiiiiiiiiiiiiiii
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+
+            return View("Profile", model);
+        }
+
+        private string UploadedFile(IFormFile file)
+        {
+            string uniqueFileName = null;
+
+            if (file != null)
+            {
+                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    file.CopyTo(fileStream);
+                }
+            }
+            return uniqueFileName;
+        }
+
     }
 }

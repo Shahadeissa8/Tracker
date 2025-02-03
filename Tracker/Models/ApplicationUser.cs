@@ -5,6 +5,7 @@ namespace Tracker.Models
 {
     public class ApplicationUser:IdentityUser
     {
+        public string Name { get; set; }
         public Genders Gender { get; set; }
        
 
