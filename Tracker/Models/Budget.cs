@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using static Tracker.Models.ViewModels.EnumsList;
 
 namespace Tracker.Models
 {
@@ -6,11 +7,9 @@ namespace Tracker.Models
     {
         public Guid BudgetId { get; set; }
         public decimal RemainingAmount { get; set; }
+        public Category Categories { get; set; }
 
-        public string CategoryName { get; set; }
         [ForeignKey("ApplicationUser")]
-        public int UserId { get; set; }
-
-       
+        public string UserId { get; set; }  
     }
 }
