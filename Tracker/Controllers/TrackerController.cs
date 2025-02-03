@@ -1,6 +1,7 @@
-﻿using System;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using Microsoft.EntityFrameworkCore;
 using Tracker.Data;
 using Tracker.Models;
@@ -21,6 +22,32 @@ namespace Tracker.Controllers
         {
             return View();
         }
+        [HttpGet]
+        public IActionResult AddExpense()
+        {
+          //  ViewBag.Depts = new SelectList(db.Departments, "DepartmentId", "DepartmentName");
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AddExpense(Expense model)
+        {
+            if (ModelState.IsValid)
+            {
+                Expense expenses = new Expense()
+                {
+                    ExpenseAmount = model.ExpenseAmount,
+                    ExpenseDate = model.ExpenseDate,
+                    Curency = model.Curency,
+                    Recurring = model.Recurring,
+                };
+                db.Expenses.Add(expenses);
+                db.SaveChanges();
+                return RedirectToAction("Home", "Index");
+            }
+       //     ViewBag.Depts = new SelectList(db.Departments, "DepartmentId", "DepartmentName");
+            return View(model);
+        }
+
         //the search action
         public async Task<IActionResult> ViewExpenses(SearchViewModel model)
         {
