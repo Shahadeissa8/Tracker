@@ -98,15 +98,6 @@ namespace Tracker.Controllers
             };//to write everything in the view in a descending based on date
             return View(search);
         }
-        public IActionResult FilterByCategory(Budget model)
-        {
-            var FindExpense =  db.Expenses.Where(Exp => Exp.UserId == UserId); //change my transaction to the view expenses from mohammad
-            if (model.Categories != null && !model.Categories.Equals("All"))
-            {
-                FindExpense = FindExpense.Where(Exp => Exp.Category.ToString().Equals(model.Categories)).ToList();
-
-            }
-            return View();
-        }
+      
     }
 }
