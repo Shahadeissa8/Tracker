@@ -77,7 +77,7 @@ namespace Tracker.Controllers
                     return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError(string.Empty, "Invalid user or password");
-                return View(model);
+                return RedirectToAction("Index", "Home");
             }
             return View();
         }

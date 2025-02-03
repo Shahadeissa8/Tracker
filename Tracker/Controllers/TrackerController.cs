@@ -98,6 +98,5 @@ namespace Tracker.Controllers
             };//to write everything in the view in a descending based on date
             return View(search);
         }
-      
     }
 }
