@@ -233,34 +233,13 @@ namespace Tracker.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Tracker.Models.Budget", b =>
-                {
-                    b.Property<Guid>("BudgetId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Categories")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("RemainingAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("BudgetId");
-
-                    b.ToTable("Budget");
-                });
-
             modelBuilder.Entity("Tracker.Models.Expense", b =>
                 {
                     b.Property<Guid>("ExpenseId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("BudgetId")
+                    b.Property<int>("Categories")
                         .HasColumnType("int");
 
                     b.Property<int>("Curency")

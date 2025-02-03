@@ -6,8 +6,6 @@
     var user = await userManager.GetUserAsync(User);
     var userId = userManager.GetUserId(User);
 }
-
-
 <h2>Profile</h2>
 
 <a asp-action="EditProfile" asp-controller="Account" asp-route-id="@userId"> Edit</a>

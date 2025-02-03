@@ -1,0 +1,44 @@
+﻿@model SearchViewModel
+@{
+	ViewData["Title"] = "View Expenses";
+}
+
+<h1>View Expenses</h1>
+
+
+<table class="table table-bordered">
+	<tr>
+		<th>Name of expense</th>
+		<th>Expense Amount</th>
+		<th>Currency</th>
+		<th>Expense Date</th>
+		<th>Expense Discription</th>
+		<th>Expense Recurrance</th>
+	</tr>
+	@if (Model.ExpensesList != null && Model.ExpensesList.Any())
+	{
+		@foreach (var expense in Model.ExpensesList)
+		{
+			<tr>
+				<td>@expense.ExpenseName</td>
+				<td>@expense.ExpenseAmount</td>
+				<td>@expense.Curency</td>
+				<td>@expense.ExpenseDate</td>
+				<td>@expense.ExpenseDescription</td>
+				<td>@expense.Recurring</td>
+			</tr>
+		}
+	}
+	else
+		{
+			<tr>
+				<td colspan="6" class="text-center">No expenses found.</td>
+			</tr>
+
+		}
+	}
+</table>
+
+<div>
+	<a asp-action="Index" asp-controller="Home" class="btn btn-primary">Back to Home</a>
+</div>
