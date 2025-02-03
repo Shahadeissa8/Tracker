@@ -11,13 +11,15 @@ namespace Tracker.Models
         [Required(ErrorMessage = "Enter The Amount")]
         public decimal ExpenseAmount { get; set; }
         public DateTime ExpenseDate { get; set; }
-
         [Required(ErrorMessage = "Choose a currency")]
         public Currencies Curency { get; set; }
         public bool? Recurring { get; set; }
         [ForeignKey("ApplicationUser")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }//supposed to be string right? because in identity user it is a string
         [ForeignKey("Budget")]
         public int BudgetId { get; set; }
+        public string ExpenseName { get; set; }
+        public string? ExpenseDescription { get; set; }
+
     }
 }
