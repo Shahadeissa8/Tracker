@@ -39,7 +39,7 @@ namespace Tracker.Controllers
                 ApplicationUser user = new ApplicationUser()
                 {
                     Name = model.Name,
-                    UserName = model.Email,
+                 //   UserName = model.Email,
                     Email = model.Email,
                     PhoneNumber = model.Mobile,
                     Gender = model.Gender,
@@ -117,79 +117,65 @@ namespace Tracker.Controllers
             }
             return View(user);
         }
-        [Authorize]
         public async Task<IActionResult> EditProfile(string? id)
         {
             if (id == null)
             {
-                return RedirectToAction("Login");
+                return RedirectToAction("Profile");
             }
 
-            var user = await userManager.FindByIdAsync(id); 
+            var user = await userManager.FindByIdAsync(id);
             if (user == null)
             {
-                return RedirectToAction("Login"); 
+                return NotFound();
             }
 
-            UpdateViewModel model = new UpdateViewModel()
+            var model = new UpdateViewModel
             {
-                Id = user.Id,
                 Name = user.Name,
-                Email = user.Email
+                Email = user.Email,
+                Mobile = user.PhoneNumber,
+                Gender = user.Gender
             };
 
-            return View(model);  
+            return View(model);
         }
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> EditProfile(UpdateViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(model);  // If the model is invalid, return the same view with error messages.
-            }
-
-            var user = await userManager.FindByIdAsync(model.Id);  // Find the user by ID.
-            if (user == null)
-            {
-                return RedirectToAction("Login");  // If user not found, redirect to login.
-            }
-
-            // Update the user data
-            user.Name = model.Name;
-            user.Email = model.Email;
-
-            // Handle profile picture upload if present
-            if (model.ProfileImage != null)
-            {
-                // Your logic to save the profile image (e.g., save it to the file system or database)
-                var fileName = Path.GetFileName(model.ProfileImage.FileName);
-                var filePath = Path.Combine(webHostEnvironment.WebRootPath, "images", fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                var user = await userManager.GetUserAsync(User);
+                if (user == null)
                 {
-                    await model.ProfileImage.CopyToAsync(stream);  // Save the uploaded file
+                    return NotFound();
                 }
 
-                user.ProfilePicture = fileName;  // Update the user's profile picture
-            }
+                user.Name = model.Name;
+                user.Email = model.Email;
+                user.PhoneNumber = model.Mobile;
+                user.Gender = model.Gender;
 
-            // Save the updated user to the database
-            var result = await userManager.UpdateAsync(user);
-            if (result.Succeeded)
-            {
-                TempData["SuccessMessage"] = "Profile updated successfully.";  // Show success message
-                return RedirectToAction("Profile", new { id = user.Id });  // Redirect to profile page (or wherever you need)
-            }
+                if (model.ProfileImage != null)
+                {
+                    string uniqueFile = UploadedFile(model.ProfileImage);
+                    user.ProfilePicture = uniqueFile;
+                }
+                var result = await userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("profile");
+                }
 
-            // If there were errors saving the user, display them
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.Code, error.Description);
+                }
 
-            return View(model);  // If something went wrong, return the view with the current model
+            }
+            return View(model);
         }
+
 
         [HttpGet]
         public IActionResult Logout()
