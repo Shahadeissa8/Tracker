@@ -28,7 +28,6 @@ namespace Tracker.Models.ViewModels
         public Genders Gender { get; set; }
         public string? Mobile { get; set; }
         [Display(Name = "Profile Picture")]
-        public IFormFile? ProfileImage { get; set; }
-
+        public IFormFile ProfileImage { get; set; }
     }
 }
