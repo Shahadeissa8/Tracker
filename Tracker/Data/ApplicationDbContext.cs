@@ -11,8 +11,8 @@ namespace Tracker.Data
         //public DbSet<ApplicationUser> Gender { get; set; }
         public DbSet<Budget> Budget { get; set; }
         public DbSet<Expense> Expenses { get; set; }
-
       
+
     }
 }
 

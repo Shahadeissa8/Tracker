@@ -12,8 +12,8 @@ using Tracker.Data;
 namespace Tracker.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250203053606_third")]
-    partial class third
+    [Migration("20250203181357_all")]
+    partial class all
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -189,6 +189,10 @@ namespace Tracker.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -232,33 +236,13 @@ namespace Tracker.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Tracker.Models.Budget", b =>
-                {
-                    b.Property<Guid>("BudgetId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Categories")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("RemainingAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("BudgetId");
-
-                    b.ToTable("Budget");
-                });
-
             modelBuilder.Entity("Tracker.Models.Expense", b =>
                 {
                     b.Property<Guid>("ExpenseId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("BudgetId")
+                    b.Property<int>("Categories")
                         .HasColumnType("int");
 
                     b.Property<int>("Curency")

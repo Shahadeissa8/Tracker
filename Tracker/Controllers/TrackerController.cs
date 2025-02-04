@@ -6,6 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Tracker.Data;
 using Tracker.Models;
 using Tracker.Models.ViewModels;
+using static Tracker.Models.ViewModels.EnumsList;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Tracker.Controllers
 {
@@ -18,33 +21,36 @@ namespace Tracker.Controllers
             db = _db;
             userManager = _userManager;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
         [HttpGet]
         public IActionResult AddExpense()
         {
-          //  ViewBag.Depts = new SelectList(db.Departments, "DepartmentId", "DepartmentName");
             return View();
         }
         [HttpPost]
-        public IActionResult AddExpense(Expense model)
+        public IActionResult AddExpense(ExpenseViewModel model)
         {
             if (ModelState.IsValid)
             {
+                var userId = userManager.GetUserId(User);
+                if (userId == null || string.IsNullOrEmpty(userId))
+                {
+                    return RedirectToAction("Login", "Account");
+                }
                 Expense expenses = new Expense()
                 {
+                    ExpenseName = model.ExpenseName,
                     ExpenseAmount = model.ExpenseAmount,
                     ExpenseDate = model.ExpenseDate,
                     Curency = model.Curency,
+                    Categories = model.Categories,
                     Recurring = model.Recurring,
+                    UserId = userId,
+                    ExpenseDescription = model.ExpenseDescription
                 };
                 db.Expenses.Add(expenses);
                 db.SaveChanges();
-                return RedirectToAction("Home", "Index");
+                return RedirectToAction("Index","Home");
             }
-       //     ViewBag.Depts = new SelectList(db.Departments, "DepartmentId", "DepartmentName");
             return View(model);
         }
 
@@ -56,6 +62,7 @@ namespace Tracker.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
+
             var FindExpense = await db.Expenses.Where(Exp => Exp.UserId == userId).ToListAsync(); //change my transaction to the view expenses from mohammad
             if (model.Amount < 0)  // Allowing 0 to mean "no filter"
             {
@@ -97,6 +104,90 @@ namespace Tracker.Controllers
                 ExpensesList = FindExpense.OrderByDescending(Exp => Exp.ExpenseDate).ToList()
             };//to write everything in the view in a descending based on date
             return View(search);
+
+
         }
+        public async Task<IActionResult> LatestTransactions()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+
+            var latestTransactions = await db.Expenses
+                .Where(e => e.UserId == userId)
+                .OrderByDescending(e => e.ExpenseDate)
+                .ToListAsync();
+
+            return View();
+        }
+        public async Task<IActionResult> Filter(string searchString, DateTime? startDate, DateTime? endDate, decimal? minAmount, decimal? maxAmount, Currencies? currency)
+        {
+            var user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return View();
+            }
+
+            // Start with all transactions for the current user
+            var transactions = db.Expenses.Where(e => e.UserId == user.Id).AsQueryable();
+
+            // Apply filters if they are provided
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                transactions = transactions.Where(t => t.ExpenseAmount.ToString().Contains(searchString) || t.ExpenseDate.ToString("g").Contains(searchString));
+            }
+            if (startDate.HasValue)
+            {
+                transactions = transactions.Where(e => e.ExpenseDate >= startDate.Value);
+            }
+            if (endDate.HasValue)
+            {
+                transactions = transactions.Where(e => e.ExpenseDate <= endDate.Value);
+            }
+
+            if (minAmount.HasValue)
+            {
+                transactions = transactions.Where(e => e.ExpenseAmount >= minAmount.Value);
+            }
+
+            if (maxAmount.HasValue)
+            {
+                transactions = transactions.Where(e => e.ExpenseAmount <= maxAmount.Value);
+            }
+
+            if (currency.HasValue)  // Filter by currency if provided
+            {
+                transactions = transactions.Where(e => e.Curency == currency.Value); // Use the correct currency field
+            }
+
+            // Fetch filtered transactions
+            var filteredTransactions = await transactions.OrderByDescending(e => e.ExpenseDate).ToListAsync();
+
+            return View(filteredTransactions);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken] // CSRF protection
+        public async Task<IActionResult> Delete(int id)
+        {
+            var expense = await db.Expenses.FindAsync(id);
+
+            if (expense == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure that the user is the one who created the expense (security check)
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (expense.UserId != userId)
+            {
+                return Unauthorized();
+            }
+
+            db.Expenses.Remove(expense);
+            await db.SaveChangesAsync();
+
+            return RedirectToAction(nameof(LatestTransactions));
+        }
+
     }
 }
+
