@@ -1,3 +1,4 @@
+
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,7 @@ namespace Tracker.Controllers
         [AllowAnonymous]
         public IActionResult Register()
         {
+            ViewData["CurrentPage"] = "Register";
             return View();
         }
         [HttpPost]
@@ -63,6 +65,7 @@ namespace Tracker.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            ViewData["CurrentPage"] = "Login";
             return View();
         }
         [AllowAnonymous]
@@ -188,6 +191,17 @@ namespace Tracker.Controllers
             return View(model);  // If something went wrong, return the view with the current model
         }
 
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        [HttpPost]
+        public async Task<IActionResult> ConfirmLogout()
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
 
         private string UploadedFile(IFormFile file)
         {
