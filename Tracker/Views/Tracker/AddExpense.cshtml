@@ -1,45 +1,74 @@
-﻿@model Tracker.Models.Expense
+﻿@model ExpenseViewModel
 
 @{
-    ViewData["Title"] = "AddExpense";
+    ViewData["Title"] = "Add Expense";
 }
 
-<h1>AddExpense</h1>
+<h1>Add Expense</h1>
 
 <h4>Expense</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="AddExpense" method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ExpenseAmount" class="control-label"></label>
-                <input asp-for="ExpenseAmount" class="form-control" />
-                <span asp-validation-for="ExpenseAmount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ExpenseDate" class="control-label"></label>
-                <input asp-for="ExpenseDate" class="form-control" />
-                <span asp-validation-for="ExpenseDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Curency" class="control-label"></label>
-                <select asp-for="Curency" class="form-control" asp-items="Html.GetEnumSelectList<EnumsList.Currencies>()"></select>
-				<option value="-1">------------ Select Currency ----------</option>
-            </div>
-            <div class="form-group">
-                    <label asp-for="Recurring" class="font-weight-bold"></label>
-                    <input asp-for="Recurring" class="form-check-input"/>
-            </div>
+	<div class="col-md-4">
 
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+		<form method="post" asp-action="AddExpense">
+			<div asp-validation-summary="All" class="text-danger"></div>
+			<div class="text text-center">
+				<tr>
+					<th>
+						<label asp-for="ExpenseName" class="control-label"></label>
+					<td>
+						<input asp-for="ExpenseName" class="form-control" />
+						<span asp-validation-for="ExpenseName" class="text-danger"></span>
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<label asp-for="ExpenseAmount" class="control-label"></label>
+					<td>
+						<input asp-for="ExpenseAmount" class="form-control" />
+						<span asp-validation-for="ExpenseAmount" class="text-danger"></span>
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<label asp-for="ExpenseDescription" class="control-label"></label>
+					<td>
+						<input asp-for="ExpenseDescription" class="form-control" />
+						<span asp-validation-for="ExpenseDescription" class="text-danger"></span>
+					</td>
+				</tr>
+				<tr>
+					<th>
+						<label asp-for="ExpenseDate" class="control-label"></label>
+					</th>
+					<input asp-for="ExpenseDate" class="form-control" />
+					<span asp-validation-for="ExpenseDate" class="text-danger"></span>
+					<th>
+				</tr>
+				<tr>
+					<label asp-for="Curency" class="control-label"></label>
+					<select asp-for="Curency" class="form-control" asp-items="Html.GetEnumSelectList<EnumsList.Currencies>()">
+						<option value="-1">------------ Select a currency ----------</option>
+					</select>
+				</tr>
+
+				<tr>
+					<label asp-for="Categories" class="control-label"></label>
+					<select asp-for="Categories" class="form-control" asp-items="Html.GetEnumSelectList<EnumsList.Category>()">
+						<option value="-1">------------ Select a category ----------</option>
+					</select>
+				</tr>
+				<tr>
+					<th>
+						<label asp-for="Recurring"></label>
+					</th>
+					<td><input asp-for="Recurring" class="form-check-input" /></td>
+				</tr>
+				<tr><input type="submit" value="Create" class="btn btn-primary" /></tr>
+			</div>
+		</form>
+	</div>
 </div>
-
 <div>
-    <a asp-action="Index">Back to List</a>
+	<a asp-action="ViewExpenses" asp-controller="Tracker" class="btn btn-primary">Back to List</a>
 </div>
-

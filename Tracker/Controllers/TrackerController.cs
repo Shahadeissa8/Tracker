@@ -8,6 +8,7 @@ using Tracker.Models;
 using Tracker.Models.ViewModels;
 using static Tracker.Models.ViewModels.EnumsList;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Tracker.Controllers
 {
@@ -20,33 +21,36 @@ namespace Tracker.Controllers
             db = _db;
             userManager = _userManager;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
         [HttpGet]
         public IActionResult AddExpense()
         {
-          //  ViewBag.Depts = new SelectList(db.Departments, "DepartmentId", "DepartmentName");
             return View();
         }
         [HttpPost]
-        public IActionResult AddExpense(Expense model)
+        public IActionResult AddExpense(ExpenseViewModel model)
         {
             if (ModelState.IsValid)
             {
+                var userId = userManager.GetUserId(User);
+                if (userId == null || string.IsNullOrEmpty(userId))
+                {
+                    return RedirectToAction("Login", "Account");
+                }
                 Expense expenses = new Expense()
                 {
+                    ExpenseName = model.ExpenseName,
                     ExpenseAmount = model.ExpenseAmount,
                     ExpenseDate = model.ExpenseDate,
                     Curency = model.Curency,
+                    Categories = model.Categories,
                     Recurring = model.Recurring,
+                    UserId = userId,
+                    ExpenseDescription = model.ExpenseDescription
                 };
                 db.Expenses.Add(expenses);
                 db.SaveChanges();
-                return RedirectToAction("Home", "Index");
+                return RedirectToAction("Index","Home");
             }
-       //     ViewBag.Depts = new SelectList(db.Departments, "DepartmentId", "DepartmentName");
             return View(model);
         }
 
@@ -58,6 +62,7 @@ namespace Tracker.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
+
             var FindExpense = await db.Expenses.Where(Exp => Exp.UserId == userId).ToListAsync(); //change my transaction to the view expenses from mohammad
             if (model.Amount < 0)  // Allowing 0 to mean "no filter"
             {

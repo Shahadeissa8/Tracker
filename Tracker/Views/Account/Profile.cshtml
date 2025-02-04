@@ -1,13 +1,24 @@
-﻿@using Microsoft.AspNetCore.Identity
-@model UpdateViewModel
-@inject UserManager<ApplicationUser> userManager;
-@{
-    ViewData["Title"] = "Profile";
-    var user = await userManager.GetUserAsync(User);
-    var userId = userManager.GetUserId(User);
-}
+profile
+
+@model ApplicationUser
 
 
-<h2>Profile</h2>
-
-<a asp-action="EditProfile" asp-controller="Account" asp-route-id="@userId"> Edit</a>
+<div class="container d-flex justify-content-center align-items-center">
+    <div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title"> @Model.Name</h5>
+            <p class="card-text">
+                <img src="@Url.Content( Model.ProfilePicture)" class="card-img-top" alt="Profile Picture" style="width: 100%; height: auto; border-radius: 50%;" />
+            </p>
+            <p class="card-text">Email: @Model.Email</p>
+        <p class="card-text">Phone: @Model.PhoneNumber</p>
+        <p class="card-text">Balance: @Model.Gender</p>
+        <p class="card-text">Balance: @Model.UserName</p>
+        <p class="card-text">Gender: @Model.Gender</p>
+                    <div class="d-flex justify-content-between">
+        <a asp-action="AllUsers" asp-controller="Account" asp-route-id="@Model.Id" class="btn btn-primary">Return to All Users</a>
+        <a asp-action="EditProfile" asp-controller="Account" asp-route-id="@Model.Id" class="btn btn-primary">Edit Profile</a>
+        </div>
+        </div>
+    </div>
+</div>
