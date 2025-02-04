@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Tracker.Data;
 using Tracker.Models;
 using Tracker.Models.ViewModels;
+using static Tracker.Models.ViewModels.EnumsList;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Tracker.Controllers
@@ -102,6 +104,90 @@ namespace Tracker.Controllers
                 ExpensesList = FindExpense.OrderByDescending(Exp => Exp.ExpenseDate).ToList()
             };//to write everything in the view in a descending based on date
             return View(search);
+
+
         }
+        public async Task<IActionResult> LatestTransactions()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+
+            var latestTransactions = await db.Expenses
+                .Where(e => e.UserId == userId)
+                .OrderByDescending(e => e.ExpenseDate)
+                .ToListAsync();
+
+            return View();
+        }
+        public async Task<IActionResult> Filter(string searchString, DateTime? startDate, DateTime? endDate, decimal? minAmount, decimal? maxAmount, Currencies? currency)
+        {
+            var user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return View();
+            }
+
+            // Start with all transactions for the current user
+            var transactions = db.Expenses.Where(e => e.UserId == user.Id).AsQueryable();
+
+            // Apply filters if they are provided
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                transactions = transactions.Where(t => t.ExpenseAmount.ToString().Contains(searchString) || t.ExpenseDate.ToString("g").Contains(searchString));
+            }
+            if (startDate.HasValue)
+            {
+                transactions = transactions.Where(e => e.ExpenseDate >= startDate.Value);
+            }
+            if (endDate.HasValue)
+            {
+                transactions = transactions.Where(e => e.ExpenseDate <= endDate.Value);
+            }
+
+            if (minAmount.HasValue)
+            {
+                transactions = transactions.Where(e => e.ExpenseAmount >= minAmount.Value);
+            }
+
+            if (maxAmount.HasValue)
+            {
+                transactions = transactions.Where(e => e.ExpenseAmount <= maxAmount.Value);
+            }
+
+            if (currency.HasValue)  // Filter by currency if provided
+            {
+                transactions = transactions.Where(e => e.Curency == currency.Value); // Use the correct currency field
+            }
+
+            // Fetch filtered transactions
+            var filteredTransactions = await transactions.OrderByDescending(e => e.ExpenseDate).ToListAsync();
+
+            return View(filteredTransactions);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken] // CSRF protection
+        public async Task<IActionResult> Delete(int id)
+        {
+            var expense = await db.Expenses.FindAsync(id);
+
+            if (expense == null)
+            {
+                return NotFound();
+            }
+
+            // Ensure that the user is the one who created the expense (security check)
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (expense.UserId != userId)
+            {
+                return Unauthorized();
+            }
+
+            db.Expenses.Remove(expense);
+            await db.SaveChangesAsync();
+
+            return RedirectToAction(nameof(LatestTransactions));
+        }
+
     }
 }
+
