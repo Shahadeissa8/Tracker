@@ -29,6 +29,7 @@ namespace Tracker.Controllers
             ViewData["CurrentPage"] = "Register";
             return View();
         }
+
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -39,23 +40,24 @@ namespace Tracker.Controllers
                 ApplicationUser user = new ApplicationUser()
                 {
                     Name = model.Name,
-                 //   UserName = model.Email,
+                    UserName = model.Email, // REQUIRED
                     Email = model.Email,
                     PhoneNumber = model.Mobile,
                     Gender = model.Gender,
                     ProfilePicture = uniqueFileName
                 };
+
                 var result = await userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-
                     await signInManager.SignInAsync(user, isPersistent: false);
-
                     return RedirectToAction("Index", "Home");
                 }
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
+                    Console.WriteLine(error.Description); // Debugging
                 }
                 return View(model);
             }
@@ -85,26 +87,6 @@ namespace Tracker.Controllers
             }
             return View();
         }
-        private string UploadedFile(RegisterViewModel model)
-        {
-            string uniqueFileName = null;
-
-            if (model.ProfileImage != null)
-            {
-                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.ProfileImage.FileName;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    model.ProfileImage.CopyTo(fileStream);
-                }
-            }
-            return uniqueFileName;
-        }
-
-
-
-
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Profile()
@@ -117,14 +99,14 @@ namespace Tracker.Controllers
             }
             return View(user);
         }
-        public async Task<IActionResult> EditProfile(string? id)
-        {
-            if (id == null)
-            {
-                return RedirectToAction("Profile");
-            }
 
-            var user = await userManager.FindByIdAsync(id);
+        [HttpGet]
+        public async Task<IActionResult> EditProfile()
+        {
+
+
+            // var user = await userManager.FindByIdAsync(id);
+            var user = await userManager.GetUserAsync(User);
             if (user == null)
             {
                 return NotFound();
@@ -156,11 +138,11 @@ namespace Tracker.Controllers
                 user.PhoneNumber = model.Mobile;
                 user.Gender = model.Gender;
 
-                if (model.ProfileImage != null)
-                {
-                    string uniqueFile = UploadedFile(model.ProfileImage);
-                    user.ProfilePicture = uniqueFile;
-                }
+                //if (model.ProfileImage != null)
+                //{
+                //    string uniqueFile = UploadedFile(model.ProfileImage);
+                //    user.ProfilePicture = uniqueFile;
+                //}
                 var result = await userManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {
@@ -176,7 +158,6 @@ namespace Tracker.Controllers
             return View(model);
         }
 
-
         [HttpGet]
         public IActionResult Logout()
         {
@@ -189,22 +170,37 @@ namespace Tracker.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        private string UploadedFile(IFormFile file)
+        //private string UploadedFile(IFormFile file)
+        //{
+        //    string uniqueFileName = null;
+
+        //    if (file != null)
+        //    {
+        //        string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "Uploads");
+        //        uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+        //        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+        //        using (var fileStream = new FileStream(filePath, FileMode.Create))
+        //        {
+        //            file.CopyTo(fileStream);
+        //        }
+        //    }
+        //    return uniqueFileName;
+        //}
+        private string UploadedFile(RegisterViewModel model)
         {
             string uniqueFileName = null;
 
-            if (file != null)
+            if (model.ProfileImage != null)
             {
-                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "Uploads");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.ProfileImage.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    file.CopyTo(fileStream);
+                    model.ProfileImage.CopyTo(fileStream);
                 }
             }
             return uniqueFileName;
         }
-
     }
 }
