@@ -1,44 +1,53 @@
 ﻿@model SearchViewModel
 @{
-	ViewData["Title"] = "View Expenses";
+    ViewData["Title"] = "View Expenses";
 }
+<link href="~/colorlib-regform-4/vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+<link href="~/colorlib-regform-4/vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+<link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+<link href="~/colorlib-regform-4/vendor/select2/select2.min.css" rel="stylesheet" media="all">
+<link href="~/colorlib-regform-4/vendor/datepicker/daterangepicker.css" rel="stylesheet" media="all">
+<link href="~/colorlib-regform-4/css/main.css" rel="stylesheet" media="all">
 
 <h1>View Expenses</h1>
 
-
-<table class="table table-bordered">
-	<tr>
-		<th>Name of expense</th>
-		<th>Expense Amount</th>
-		<th>Currency</th>
-		<th>Expense Date</th>
-		<th>Expense Discription</th>
-		<th>Expense Recurrance</th>
-	</tr>
-	@if (Model.ExpensesList != null && Model.ExpensesList.Any())
-	{
-		@foreach (var expense in Model.ExpensesList)
-		{
-			<tr>
-				<td>@expense.ExpenseName</td>
-				<td>@expense.ExpenseAmount</td>
-				<td>@expense.Curency</td>
-				<td>@expense.ExpenseDate</td>
-				<td>@expense.ExpenseDescription</td>
-				<td>@expense.Recurring</td>
-			</tr>
-		}
-	}
-	else
-		{
-			<tr>
-				<td colspan="6" class="text-center">No expenses found.</td>
-			</tr>
-
-		}
-	}
+<!-- Table Styling -->
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Name of expense</th>
+            <th>Expense Amount</th>
+            <th>Currency</th>
+            <th>Expense Date</th>
+            <th>Expense Description</th>
+            <th>Expense Recurrence</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.ExpensesList != null && Model.ExpensesList.Any())
+        {
+            @foreach (var expense in Model.ExpensesList)
+            {
+                <tr>
+                    <td>@expense.ExpenseName</td>
+                    <td>@expense.ExpenseAmount</td>
+                    <td>@expense.Curency</td>
+                    <td>@expense.ExpenseDate</td>
+                    <td>@expense.ExpenseDescription</td>
+                    <td>@expense.Recurring</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">No expenses found.</td>
+            </tr>
+        }
+    </tbody>
 </table>
 
+<!-- Back Button -->
 <div>
-	<a asp-action="Index" asp-controller="Home" class="btn btn-primary">Back to Home</a>
+    <a asp-action="Index" asp-controller="Home" class="btn btn--radius-2 btn--blue">Back to Home</a>
 </div>

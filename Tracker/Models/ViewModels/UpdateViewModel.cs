@@ -12,7 +12,9 @@ public class UpdateViewModel
     public string Email { get; set; }
 
     [Display(Name = "Profile Picture")]
-    public IFormFile? ProfileImage { get; set; }
+    public IFormFile? ProfileImageFile { get; set; }
+
+    public string? ProfileImage { get; set; }
     public Genders Gender { get; set; }
     public string? Mobile { get; set; }
 

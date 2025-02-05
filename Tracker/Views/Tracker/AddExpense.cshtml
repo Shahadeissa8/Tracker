@@ -3,72 +3,103 @@
 @{
     ViewData["Title"] = "Add Expense";
 }
+<link href="~/colorlib-regform-4/vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+<link href="~/colorlib-regform-4/vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+<link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+<link href="~/colorlib-regform-4/vendor/select2/select2.min.css" rel="stylesheet" media="all">
+<link href="~/colorlib-regform-4/vendor/datepicker/daterangepicker.css" rel="stylesheet" media="all">
+<link href="~/colorlib-regform-4/css/main.css" rel="stylesheet" media="all">
 
-<h1>Add Expense</h1>
+<style>
+    .page-wrapper {
+        background: #ffffff !important;
+    }
 
-<h4>Expense</h4>
-<div class="row">
-	<div class="col-md-4">
+    .form-control, .btn {
+        font-size: 1.1rem;
+    }
+</style>
 
-		<form method="post" asp-action="AddExpense">
-			<div asp-validation-summary="All" class="text-danger"></div>
-			<div class="text text-center">
-				<tr>
-					<th>
-						<label asp-for="ExpenseName" class="control-label"></label>
-					<td>
-						<input asp-for="ExpenseName" class="form-control" />
-						<span asp-validation-for="ExpenseName" class="text-danger"></span>
-					</td>
-				</tr>
-				<tr>
-					<th>
-						<label asp-for="ExpenseAmount" class="control-label"></label>
-					<td>
-						<input asp-for="ExpenseAmount" class="form-control" />
-						<span asp-validation-for="ExpenseAmount" class="text-danger"></span>
-					</td>
-				</tr>
-				<tr>
-					<th>
-						<label asp-for="ExpenseDescription" class="control-label"></label>
-					<td>
-						<input asp-for="ExpenseDescription" class="form-control" />
-						<span asp-validation-for="ExpenseDescription" class="text-danger"></span>
-					</td>
-				</tr>
-				<tr>
-					<th>
-						<label asp-for="ExpenseDate" class="control-label"></label>
-					</th>
-					<input asp-for="ExpenseDate" class="form-control" />
-					<span asp-validation-for="ExpenseDate" class="text-danger"></span>
-					<th>
-				</tr>
-				<tr>
-					<label asp-for="Curency" class="control-label"></label>
-					<select asp-for="Curency" class="form-control" asp-items="Html.GetEnumSelectList<EnumsList.Currencies>()">
-						<option value="-1">------------ Select a currency ----------</option>
-					</select>
-				</tr>
+<body>
+    <div class="page-wrapper bg-gra-02 p-t-130 p-b-100 font-poppins">
+        <div class="wrapper wrapper--w680">
+            <div class="card card-4">
+                <div class="card-body">
+                    <h2 class="title">Add A New Expense</h2>
+                    <form method="post" asp-action="AddExpense">
+                        <div asp-validation-summary="All" class="text-danger"></div>
 
-				<tr>
-					<label asp-for="Categories" class="control-label"></label>
-					<select asp-for="Categories" class="form-control" asp-items="Html.GetEnumSelectList<EnumsList.Category>()">
-						<option value="-1">------------ Select a category ----------</option>
-					</select>
-				</tr>
-				<tr>
-					<th>
-						<label asp-for="Recurring"></label>
-					</th>
-					<td><input asp-for="Recurring" class="form-check-input" /></td>
-				</tr>
-				<tr><input type="submit" value="Create" class="btn btn-primary" /></tr>
-			</div>
-		</form>
-	</div>
-</div>
-<div>
-	<a asp-action="ViewExpenses" asp-controller="Tracker" class="btn btn-primary">Back to List</a>
-</div>
+                        <!-- Expense Name -->
+                        <div class="input-group d-flex flex-column">
+                            <label class="label">Expense Name</label>
+                            <input asp-for="ExpenseName" class="input--style-4 form-control w-100">
+                            <span asp-validation-for="ExpenseName" class="text-danger"></span>
+                        </div>
+
+                        <!-- Expense Amount -->
+                        <div class="input-group d-flex flex-column">
+                            <label class="label">Amount</label>
+                            <input asp-for="ExpenseAmount" class="input--style-4 form-control w-100">
+                            <span asp-validation-for="ExpenseAmount" class="text-danger"></span>
+                        </div>
+
+                        <!-- Expense Description -->
+                        <div class="input-group d-flex flex-column">
+                            <label class="label">Description</label>
+                            <input asp-for="ExpenseDescription" class="input--style-4 form-control w-100">
+                            <span asp-validation-for="ExpenseDescription" class="text-danger"></span>
+                        </div>
+
+                        <!-- Expense Date -->
+                        <div class="input-group d-flex flex-column">
+                            <label class="label">Date</label>
+                            <input asp-for="ExpenseDate" class="input--style-4 js-datepicker form-control w-100">
+                            <span asp-validation-for="ExpenseDate" class="text-danger"></span>
+                        </div>
+
+                        <!-- Currency Dropdown -->
+                        <div class="input-group d-flex flex-column">
+                            <label class="label">Currency</label>
+                            <select asp-for="Curency" class="input--style-4 form-control w-100" asp-items="Html.GetEnumSelectList<EnumsList.Currencies>()">
+                                <option disabled selected>Select Currency</option>
+                            </select>
+                            <span asp-validation-for="Curency" class="text-danger"></span>
+                        </div>
+
+                        <!-- Category Dropdown -->
+                        <div class="input-group d-flex flex-column">
+                            <label class="label">Category</label>
+                            <select asp-for="Categories" class="input--style-4 form-control w-100" asp-items="Html.GetEnumSelectList<EnumsList.Category>()">
+                                <option disabled selected>Select Category</option>
+                            </select>
+                            <span asp-validation-for="Categories" class="text-danger"></span>
+                        </div>
+
+                        <!-- Recurring Checkbox -->
+                        <div class="input-group d-flex flex-column">
+                            <label class="label">Recurring</label>
+                            <input asp-for="Recurring" type="checkbox" class="form-check-input">
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="p-t-15">
+                            <button class="btn btn--radius-2 btn--blue" type="submit">Add Expense</button>
+                            <button asp-action="ViewExpenses" asp-controller="Tracker" class="btn btn--radius-2 btn--blue">All Expenses</button>
+                        </div>
+                    </form>
+
+                    <div class="p-t-15 text-center">
+                        <a asp-action="ViewExpenses" asp-controller="Tracker" class="btn btn--radius-2 btn--gray">Back to List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add your scripts here -->
+    <script src="~/colorlib-regform-4/vendor/jquery/jquery.min.js"></script>
+    <script src="~/colorlib-regform-4/vendor/select2/select2.min.js"></script>
+    <script src="~/colorlib-regform-4/vendor/datepicker/moment.min.js"></script>
+    <script src="~/colorlib-regform-4/vendor/datepicker/daterangepicker.js"></script>
+    <script src="~/colorlib-regform-4/js/global.js"></script>
+</body>

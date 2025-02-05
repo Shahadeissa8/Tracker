@@ -32,6 +32,10 @@
 						@if (signInManager.IsSignedIn(User))
 						{
 							<li class="nav-item">
+								<a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link text-capitalize">Home</a>
+							</li>
+
+							<li class="nav-item">
 								<a asp-area="" asp-controller="Tracker" asp-action="AddExpense" class="nav-link text-capitalize">Add Expenses</a>
 							</li>
 							<li class="nav-item">

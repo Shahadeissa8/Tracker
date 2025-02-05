@@ -14,109 +14,109 @@
 <link href="~/assets1/css/oldpro/swiper-bundle2.css" rel="stylesheet" />
 <link href="~/assets1/css/fontawesome5pro.css" rel="stylesheet" />
 <link href="~/assets1/css/oldpro/fontawesome5pro2.css" rel="stylesheet" />
-<!-- sign up area start -->
-<section class="signup__area po-rel-z1 pt-100 pb-145">
-
+<section class="hero-banner position-relative overflow-hidden" style="background-color: #007bff;">
     <div class="container">
-        <div class="row">
-            <div class="col-xxl-8 offset-xxl-2 col-xl-8 offset-xl-2">
-                <div class="section__title-wrapper text-center mb-55">
-                    <h2 class="section__title">Create a free <br>  Account</h2>
-                    <p>Easily track and manage your expenses.</p>
+        <div class="row d-flex flex-wrap align-items-center">
+            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <div class="position-relative center-hero-color" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                   
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-xxl-6 offset-xxl-3 col-xl-6 offset-xl-3 col-lg-8 offset-lg-2">
-                <div class="sign__wrapper white-bg">
-                    <div class="sign__header mb-35">
-                        <div class="sign__in text-center">
-                            <p> <span>........</span> <a href="sign-up.html">sign up</a> with your email<span> ........</span> </p>
+
+            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <div class="position-relative center-hero-color" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                    <div class="sign__wrapper white-bg" style="width: 100%; padding: 30px; border-radius: 8px; margin-left: -600px;">
+                        <div class="section__title-wrapper text-center mb-55">
+                            <h2 class="section__title">Create a free <br>  Account</h2>
+                            <p>Easily track and manage your expenses.</p>
                         </div>
-                    </div>
-                    <div class="sign__form">
-                        <form asp-action="Register" asp-controller="Account" method="post" enctype="multipart/form-data">
-                            <div class="sign__input-wrapper mb-25">
-                                <h5>Name</h5>
-                                <div class="sign__input">
-                                    <input asp-for="Name" placeholder="Enter Name">
-                                    <span asp-validation-for="Name" class="text-danger"></span>
-                                    <i class="fal fa-envelope"></i>
+                        <div class="sign__form">
+                            <form asp-action="Register" asp-controller="Account" method="post" enctype="multipart/form-data">
+                                <div class="sign__input-wrapper mb-25">
+                                    <h5>Name</h5>
+                                    <div class="sign__input">
+                                        <input asp-for="Name" placeholder="Enter Your Name">
+                                        <span asp-validation-for="Name" class="text-danger"></span>
+                                        <i class="fal fa-address-card"></i>
+                                    </div>
+                                </div>
+
+                                <div class="sign__input-wrapper mb-25">
+                                    <h5>Email</h5>
+                                    <div class="sign__input">
+                                        <input asp-for="Email" placeholder="E-mail address">
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                        <i class="fal fa-envelope"></i>
+                                    </div>
+                                </div>
+                                <div class="sign__input-wrapper mb-25">
+                                    <h5>Confirm email</h5>
+                                    <div class="sign__input">
+                                        <input asp-for="ConfirmEmail" placeholder="Confirm E-mail address">
+                                        <span asp-validation-for="ConfirmEmail" class="text-danger"></span>
+                                        <i class="fal fa-envelope"></i>
+                                    </div>
+                                </div>
+
+                                <div class="sign__input-wrapper mb-25">
+                                    <h5>Password</h5>
+                                    <div class="sign__input">
+                                        <input asp-for="Password" placeholder="Password">
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+                                        <i class="fal fa-lock"></i>
+                                    </div>
+                                </div>
+                                <div class="sign__input-wrapper mb-10">
+                                    <h5>Re-Password</h5>
+                                    <div class="sign__input">
+                                        <input asp-for="ConfirmPassword" placeholder="Re-Password">
+                                        <span asp-validation-for="ConfirmEmail" class="text-danger"></span>
+                                        <i class="fal fa-lock"></i>
+                                    </div>
+                                </div>
+
+                                <div class="sign__input-wrapper mb-10">
+                                    <h5>Mobile</h5>
+                                    <div class="sign__input">
+                                        <input asp-for="Mobile" placeholder="Mobile Number">
+                                        <span asp-validation-for="Mobile" class="text-danger"></span>
+                                        <i class="fal fa-mobile"></i>
+                                    </div>
+                                </div>
+                                <div class="sign__input-wrapper mb-10">
+                                    <h5>Gender</h5>
+                                    <div class="sign__input">
+                                        <select asp-for="Gender" class="form-control sign__select" asp-items="@Html.GetEnumSelectList<EnumsList.Genders>()" style="height: 55px; background-color: #f0f0f0; color: #333;">>
+
+                                            <option value="" disabled selected>
+                                                Select Gender
+                                            </option>
+                                        </select>
+                                        <span asp-validation-for="Gender" class="text-danger"></span>
+                                    </div>
+                                    <div class="signinput-wrapper mb-25">
+                                        <h5>Profile Picture</h5>
+                                        <div class="custom-file">
+                                            <input asp-for="ProfileImage" class="custom-file-input" id="customFile" accept="image/*" />
+                                            <span asp-validation-for="ProfileImage" class="text-danger"></span>
+                                            <i class="fal fa-image"></i>
+                                        </div>
+                                    </div>
 
                                 </div>
-                            </div>
+                                <input class="e-btn w-100" type="submit" value="Sign Up" />
 
-                            <div class="sign__input-wrapper mb-25">
-                                <h5>Email</h5>
-                                <div class="sign__input">
-                                    <input asp-for="Email" placeholder="e-mail address">
-                                    <span asp-validation-for="Email" class="text-danger"></span>
-                                    <i class="fal fa-envelope"></i>
-
+                                <div class="sign__new text-center mt-20">
+                                    <p>Already a user ? <a asp-action="Login"> Sign In</a></p>
                                 </div>
-                            </div>
-                            <div class="sign__input-wrapper mb-25">
-                                <h5>Confirm email</h5>
-                                <div class="sign__input">
-                                    <input asp-for="ConfirmEmail" placeholder="Confirm e-mail address">
-                                    <span asp-validation-for="ConfirmEmail" class="text-danger"></span>
-                                    <i class="fal fa-envelope"></i>
-
-                                </div>
-                            </div>
-
-                            <div class="sign__input-wrapper mb-25">
-                                <h5>Password</h5>
-                                <div class="sign__input">
-                                    <input asp-for="Password" placeholder="Password">
-                                    <span asp-validation-for="Password" class="text-danger"></span>
-                                    <i class="fal fa-lock"></i>
-
-                                </div>
-                            </div>
-                            <div class="sign__input-wrapper mb-10">
-                                <h5>Re-Password</h5>
-                                <div class="sign__input">
-                                    <input asp-for="ConfirmPassword" placeholder="Re-Password">
-                                    <span asp-validation-for="ConfirmEmail" class="text-danger"></span>
-                                    <i class="fal fa-lock"></i>
-
-                                </div>
-                            </div>
-                      
-                            <div class="sign__input-wrapper mb-10">
-                                <h5>Mobile</h5>
-                                <div class="sign__input">
-                                    <input asp-for="Mobile" placeholder="Mobile Number">
-                                    <i class="fal fa-mobile"></i>
-
-                                </div>
-                            </div>
-                            <div class="sign__input-wrapper mb-10">
-                                <h5>Gender</h5>
-                                <div class="sign__input">
-                                    <select asp-for="Gender" class="form-control sign__select" asp-items="@Html.GetEnumSelectList<EnumsList.Genders>()" placeholder="Select Gender"></select>
-                                    <span asp-validation-for="Gender" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="signinput-wrapper mb-25">
-                                <h5>Profile Picture</h5>
-                                <div class="custom-file">
-                                    <input asp-for="ProfileImage" class="custom-file-input" id="customFile"/>
-                                    @* <label class="custom-file-label" for="customFile">Choose a picture</label> *@
-                                    <span asp-validation-for="ProfileImage" class="text-danger"></span>
-                                    <i class="fal fa-image"></i>
-                                </div>
-                            </div>
-                            <input class="e-btn w-100" type="submit" value="Sign Up" />
-
-                            <div class="sign__new text-center mt-20">
-                                <p>Already a user ? <a asp-action="Login"> Sign In</a></p>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+
+
