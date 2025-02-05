@@ -57,7 +57,7 @@ namespace Tracker.Controllers
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
-                return View(model);
+                return RedirectToAction("Profile");
             }
             return View(model);
         }
@@ -91,7 +91,7 @@ namespace Tracker.Controllers
 
             if (model.ProfileImage != null)
             {
-                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images");
+                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "uploads");
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + model.ProfileImage.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -117,14 +117,13 @@ namespace Tracker.Controllers
             }
             return View(user);
         }
-        public async Task<IActionResult> EditProfile(string? id)
+        [HttpGet]
+        public async Task<IActionResult> EditProfile()
         {
-            if (id == null)
-            {
-                return RedirectToAction("Profile");
-            }
 
-            var user = await userManager.FindByIdAsync(id);
+
+            // var user = await userManager.FindByIdAsync(id);
+            var user = await userManager.GetUserAsync(User);
             if (user == null)
             {
                 return NotFound();
@@ -195,7 +194,7 @@ namespace Tracker.Controllers
 
             if (file != null)
             {
-                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images");
+                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "uploads");
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))

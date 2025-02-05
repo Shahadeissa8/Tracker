@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     <div class="sign__form">
-                        <form asp-action="Register" asp-controller="Account" method="post">
+                        <form asp-action="Register" asp-controller="Account" method="post" enctype="multipart/form-data">
                             <div class="sign__input-wrapper mb-25">
                                 <h5>Name</h5>
                                 <div class="sign__input">
@@ -99,7 +99,16 @@
                                     <span asp-validation-for="Gender" class="text-danger"></span>
                                 </div>
                             </div>
-                            <button class="e-btn w-100"> <span></span> Sign Up</button>
+                            <div class="sign__input-wrapper mb-25">
+                                <h5>Profile Picture</h5>
+                                <div class="sign__input">
+                                    <input type="file" asp-for="ProfileImage" accept="image/*" />
+                                    <span asp-validation-for="ProfileImage" class="text-danger"></span>
+                                    <i class="fal fa-image"></i>
+                                </div>
+                            </div>
+
+                            <button class="e-btn w-100"  <span></span> sign up </button>
                             <div class="sign__new text-center mt-20">
                                 <p>Already a user ? <a asp-action="Login"> Sign In</a></p>
                             </div>
