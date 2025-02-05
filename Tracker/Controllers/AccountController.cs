@@ -36,7 +36,7 @@ namespace Tracker.Controllers
         {
             if (ModelState.IsValid)
             {
-                string uniqueFileName = UploadedFile(model);
+                string uniqueFileName = UploadedFile(model.ProfileImage);
                 ApplicationUser user = new ApplicationUser()
                 {
                     Name = model.Name,
@@ -117,8 +117,9 @@ namespace Tracker.Controllers
                 Name = user.Name,
                 Email = user.Email,
                 Mobile = user.PhoneNumber,
-                Gender = user.Gender
-            };
+                Gender = user.Gender,
+                ProfileImage = user.ProfilePicture
+        };
 
             return View(model);
         }
@@ -138,25 +139,26 @@ namespace Tracker.Controllers
                 user.PhoneNumber = model.Mobile;
                 user.Gender = model.Gender;
 
-                //if (model.ProfileImage != null)
-                //{
-                //    string uniqueFile = UploadedFile(model.ProfileImage);
-                //    user.ProfilePicture = uniqueFile;
-                //}
+                if (model.ProfileImageFile != null)
+                {
+                    string uniqueFile = UploadedFile(model.ProfileImageFile);
+                    user.ProfilePicture = uniqueFile;
+                }
+
                 var result = await userManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("profile");
+                    return RedirectToAction("Profile");
                 }
 
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(error.Code, error.Description);
                 }
-
             }
             return View(model);
         }
+
 
         [HttpGet]
         public IActionResult Logout()
@@ -186,18 +188,18 @@ namespace Tracker.Controllers
         //    }
         //    return uniqueFileName;
         //}
-        private string UploadedFile(RegisterViewModel model)
+        private string UploadedFile(IFormFile file)
         {
             string uniqueFileName = null;
 
-            if (model.ProfileImage != null)
+            if (file != null)
             {
                 string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "Uploads");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.ProfileImage.FileName;
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    model.ProfileImage.CopyTo(fileStream);
+                    file.CopyTo(fileStream);
                 }
             }
             return uniqueFileName;

@@ -25,9 +25,12 @@ namespace Tracker.Models.ViewModels
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Password not match")]
         public string ConfirmPassword { get; set; }
+        [Required(ErrorMessage = "Enter Select Gender")]
+
         public Genders Gender { get; set; }
+        [Required(ErrorMessage = "Enter Your Mobile Number")]
         public string? Mobile { get; set; }
         [Display(Name = "Profile Picture")]
-        public IFormFile ProfileImage { get; set; }
+        public IFormFile? ProfileImage { get; set; }
     }
 }

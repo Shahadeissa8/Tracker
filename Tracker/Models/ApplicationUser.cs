@@ -8,6 +8,6 @@ namespace Tracker.Models
         public string Name { get; set; }
         public Genders Gender { get; set; }
         public decimal Income { get; set; }
-        public string ProfilePicture { get; set; }
+        public string? ProfilePicture { get; set; }
     }
 }

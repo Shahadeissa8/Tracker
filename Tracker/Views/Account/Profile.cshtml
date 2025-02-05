@@ -37,7 +37,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6">
-                        <div class="teacher__details-thumb p-relative w-img pr-30">
+                        <div class="teacher__details-thumb p-relative w-img pr-30">                      
                             <img src="~/Uploads/@Model.ProfilePicture" alt="Instructor Profile Image">
                             <div class="teacher__details-shape">
                                 <img class="teacher-details-shape-1" src="~/assets1/img/teacher/details/shape/shape-1.png" alt="">
@@ -53,42 +53,25 @@
                                     <span>@Model.Email</span>
                                 </div>
                                 <div class="teacher__rating">
-                                    <h5>Review:</h5>
+                                    <h5>Balance :</h5>
                                     <div class="teacher__rating-inner d-flex align-items-center">
                                         <ul>
                                             <li><a href="#"> <i class="icon_star"></i> </a></li>
-                                            <li><a href="#"> <i class="icon_star"></i> </a></li>
-                                            <li><a href="#"> <i class="icon_star"></i> </a></li>
-                                            <li><a href="#"> <i class="icon_star"></i> </a></li>
-                                            <li><a href="#"> <i class="icon_star"></i> </a></li>
+                                            <li><a href="#">  @Model.Name </a></li> @*Add Balance HERE  *@
+
+                                          
                                         </ul>
-                                        <p>4.5</p>
                                     </div>
                                 </div>
-                                <div class="teacher__social-2">
-                                    <h4>Follow Us:</h4>
-                                    <ul>
-                                        <li>
-                                            <a href="#">
-                                                <i class="social_facebook"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="social_twitter"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="social_vimeo"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="social_linkedin"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
+                                <div class="teacher__rating">
+                                    <h5>Mobile</h5>
+                                    <div class="teacher__rating-inner d-flex align-items-center">
+                                        <ul>
+                                            <li><a href="#">  @Model.PhoneNumber </a></li> @*Add Balance HERE  *@
+
+
+                                        </ul>
+                                    </div>
                                 </div>
                                 <div class="teacher__follow mb-5">
                                     <a asp-action="EditProfile" asp-controller="Account" class="teacher__follow-btn">Edit your profile  </a>

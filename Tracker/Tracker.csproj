@@ -22,6 +22,15 @@
   <ItemGroup>
     <Folder Include="wwwroot\assets1\img\hero\hero-3\" />
     <Folder Include="wwwroot\Uploads\" />
+    <Folder Include="wwwroot\Uploads\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css-table-12\.DS_Store" />
+    <None Include="wwwroot\css-table-12\css\.DS_Store" />
+    <None Include="wwwroot\css-table-12\fonts\.DS_Store" />
+    <None Include="wwwroot\css-table-12\images\.DS_Store" />
+    <None Include="wwwroot\css-table-12\scss\.DS_Store" />
   </ItemGroup>
 
 </Project>
