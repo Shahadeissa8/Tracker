@@ -59,6 +59,12 @@
 					</select>
 				</tr>
 				<tr>
+					<label asp-for="Recurrin" class="control-label"></label>
+					<select asp-for="Recurrin" class="form-control" asp-items="Html.GetEnumSelectList<EnumsList.Recurrings>()">
+						<option value="-1">------------ Select a recurring? ----------</option>
+					</select>
+				</tr>
+				<tr>
 					<th>
 						<label asp-for="Recurring"></label>
 					</th>

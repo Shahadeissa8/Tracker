@@ -1,5 +1,6 @@
-@using Microsoft.AspNetCore.Identity;
-@inject SignInManager<ApplicationUser> signInManager;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> signInManager
+@inject UserManager<ApplicationUser> userManager
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,13 +56,26 @@
 						else
 						{
 							@if (ViewData["CurrentPage"]?.ToString() != "Login" && ViewData["CurrentPage"]?.ToString() != "Register")
-							{
-								<li class="nav-item">
-									<a asp-controller="Account" asp-action="Login" class="btn btn-warning btn-hover-secondery text-capitalize">Login</a>
-								</li>
-								<li class="nav-item">
-									<a asp-controller="Account" asp-action="Register" class="btn btn-warning btn-hover-secondery text-capitalize">Register</a>
-
+							{@if (User.Identity.IsAuthenticated)
+								{
+									<li class="nav-item">
+										<a asp-area="" asp-controller="Tracker" asp-action="AddExpense" class="nav-link text-capitalize">Add Expenses</a>
+									</li>
+									<li class="nav-item">
+										<a asp-area="" asp-controller="Tracker" asp-action="ViewExpenses" class="nav-link text-capitalize">View Expenses</a>
+									</li>
+									<li class="nav-item">
+										<a asp-controller="Account" asp-action="Profile" class="nav-link text-capitalize">Profile</a>
+									</li>
+									<form asp-action="ConfirmLogout" asp-controller="Account" method="post">
+										<input type="submit" class="btn btn-warning btn-hover-secondery text-capitalize" value="Logout" />
+									</form>
+								}
+								else
+								{
+									<a asp-controller="Account" asp-action="Login" class="btn btn-warning">Login</a>
+									<a asp-controller="Account" asp-action="Register" class="btn btn-warning">Register</a>
+								}
 
 									@* <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel"> *@
 									@* 	<div class="offcanvas-header"> *@
@@ -93,7 +107,7 @@
 									@* 		</div> *@
 									@* 	</div> *@
 									@* </div> *@
-								</li>
+								
 							}
 							<!-- Register and Log In buttons -->
 						}

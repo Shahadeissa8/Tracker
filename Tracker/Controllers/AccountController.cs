@@ -9,7 +9,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Tracker.Controllers
 {
-    // [Authorize]
+     [Authorize]
     public class AccountController : Controller
     {
         private UserManager<ApplicationUser> userManager;
@@ -70,6 +70,7 @@ namespace Tracker.Controllers
             ViewData["CurrentPage"] = "Login";
             return View();
         }
+
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -87,7 +88,7 @@ namespace Tracker.Controllers
             }
             return View();
         }
-        [Authorize]
+        
         [HttpGet]
         public async Task<IActionResult> Profile()
         {

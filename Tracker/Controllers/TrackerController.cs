@@ -36,25 +36,32 @@ namespace Tracker.Controllers
                 {
                     return RedirectToAction("Login", "Account");
                 }
-                Expense expenses = new Expense()
+
+                Expense expense = new Expense()
                 {
                     ExpenseName = model.ExpenseName,
                     ExpenseAmount = model.ExpenseAmount,
                     ExpenseDate = model.ExpenseDate,
                     Curency = model.Curency,
                     Categories = model.Categories,
-                    Recurring = model.Recurring,
                     UserId = userId,
-                    ExpenseDescription = model.ExpenseDescription
+                    ExpenseDes = model.ExpenseDescription,
+                    Recurrin = model.Recurrin
                 };
-                db.Expenses.Add(expenses);
+
+                db.Expenses.Add(expense);
                 db.SaveChanges();
-                return RedirectToAction("Index","Home");
+
+                if (model.Recurring)
+                {
+                    ScheduleNextOccurrence(expense);
+                }
+
+                return RedirectToAction("ViewExpenses");
             }
             return View(model);
         }
 
-        //the search action
         public async Task<IActionResult> ViewExpenses(SearchViewModel model)
         {
             var userId = userManager.GetUserId(User);
@@ -77,7 +84,7 @@ namespace Tracker.Controllers
             if (!string.IsNullOrEmpty(model.SearchString))
             {
                 var matchedExpenses = FindExpense
-                    .Where(Exp => Exp.ExpenseName.Contains(model.SearchString) || Exp.ExpenseDescription.Contains(model.SearchString))
+                    .Where(Exp => Exp.ExpenseName.Contains(model.SearchString) || Exp.ExpenseDes.Contains(model.SearchString))
                     .ToList();
 
                 if (matchedExpenses.Any())
@@ -187,7 +194,7 @@ namespace Tracker.Controllers
 
             return RedirectToAction(nameof(LatestTransactions));
         }
-
+   
     }
 }
 
