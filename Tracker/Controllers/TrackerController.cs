@@ -36,32 +36,26 @@ namespace Tracker.Controllers
                 {
                     return RedirectToAction("Login", "Account");
                 }
-
-                Expense expense = new Expense()
+                Expense expenses = new Expense()
                 {
                     ExpenseName = model.ExpenseName,
                     ExpenseAmount = model.ExpenseAmount,
                     ExpenseDate = model.ExpenseDate,
                     Curency = model.Curency,
                     Categories = model.Categories,
+                    Recurrin = model.Recurrin,
                     UserId = userId,
-                    ExpenseDes = model.ExpenseDescription,
-                    Recurrin = model.Recurrin
+                    ExpenseDes = model.ExpenseDescription
                 };
-
-                db.Expenses.Add(expense);
+                db.Expenses.Add(expenses);
                 db.SaveChanges();
-
-                if (model.Recurring)
-                {
-                    ScheduleNextOccurrence(expense);
-                }
-
-                return RedirectToAction("ViewExpenses");
+                return RedirectToAction("Index", "Home");
             }
             return View(model);
         }
 
+
+        //the search action
         public async Task<IActionResult> ViewExpenses(SearchViewModel model)
         {
             var userId = userManager.GetUserId(User);
@@ -194,7 +188,7 @@ namespace Tracker.Controllers
 
             return RedirectToAction(nameof(LatestTransactions));
         }
-   
+
     }
 }
 
