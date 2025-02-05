@@ -1,77 +1,77 @@
-﻿@* @model IEnumerable<Expense> *@
+﻿  @model IEnumerable<Expense>  
 
-@* <h2>Latest Transactions</h2> *@
+  <h2>Latest Transactions</h2>  
 
-@* <form method="get" asp-action="Profile"> *@
-@*     <div class="form-group"> *@
-@*         <label for="searchString">Search</label> *@
-@*         <input type="text" class="form-control" id="searchString" name="searchString" value="@ViewData["searchString"]" /> *@
-@*     </div> *@
-@*     <div class="form-group"> *@
-@*         <label for="startDate">Start Date</label> *@
-@*         <input type="date" class="form-control" id="startDate" name="startDate" value="@ViewData["startDate"]" /> *@
-@*     </div> *@
-@*     <div class="form-group"> *@
-@*         <label for="endDate">End Date</label> *@
-@*         <input type="date" class="form-control" id="endDate" name="endDate" value="@ViewData["endDate"]" /> *@
-@*     </div> *@
-@*     <div class="form-group"> *@
-@*         <label for="minAmount">Min Amount</label> *@
-@*         <input type="number" class="form-control" id="minAmount" name="minAmount" value="@ViewData["minAmount"]" /> *@
-@*     </div> *@
-@*     <div class="form-group"> *@
-@*         <label for="maxAmount">Max Amount</label> *@
-@*         <input type="number" class="form-control" id="maxAmount" name="maxAmount" value="@ViewData["maxAmount"]" /> *@
-@*     </div> *@
-@*     <button type="submit" class="btn btn-primary">Filter</button> *@
-@* </form> *@
+  <form method="get" asp-action="Profile">  
+      <div class="form-group">  
+          <label for="searchString">Search</label>  
+          <input type="text" class="form-control" id="searchString" name="searchString" value="@ViewData["searchString"]" />  
+      </div>  
+      <div class="form-group">  
+          <label for="startDate">Start Date</label>  
+          <input type="date" class="form-control" id="startDate" name="startDate" value="@ViewData["startDate"]" />  
+      </div>  
+      <div class="form-group">  
+          <label for="endDate">End Date</label>  
+          <input type="date" class="form-control" id="endDate" name="endDate" value="@ViewData["endDate"]" />  
+      </div>  
+      <div class="form-group">  
+          <label for="minAmount">Min Amount</label>  
+          <input type="number" class="form-control" id="minAmount" name="minAmount" value="@ViewData["minAmount"]" />  
+      </div>  
+      <div class="form-group">  
+          <label for="maxAmount">Max Amount</label>  
+          <input type="number" class="form-control" id="maxAmount" name="maxAmount" value="@ViewData["maxAmount"]" />  
+      </div>  
+      <button type="submit" class="btn btn-primary">Filter</button>  
+  </form>  
 
-@* <table class="table table-striped mt-4"> *@
-@*     <thead> *@
-@*         <tr> *@
-@*             <th>Amount</th> *@
-@*             <th>Date</th> *@
-@*             <th>Currency</th> *@
-@*             <th>Recurring</th> *@
-@*         </tr> *@
-@*     </thead> *@
-@*     <tbody> *@
-@*         @foreach (var expense in Model) *@
-@*         { *@
-@*             <tr> *@
-@*                 <td>@expense.ExpenseAmount</td> *@
-@*                 <td>@expense.ExpenseDate.ToString("g")</td> *@
-@*                 <td>@expense.Curency</td> *@
-@*                 <td>@expense.Recurrin</td> *@
-@*             </tr> *@
-@*         } *@
-@*     </tbody> *@
-@* </table> *@
+  <table class="table table-striped mt-4">  
+      <thead>  
+          <tr>  
+              <th>Amount</th>  
+              <th>Date</th>  
+              <th>Currency</th>  
+              <th>Recurring</th>  
+          </tr>  
+      </thead>  
+      <tbody>  
+          @foreach (var expense in Model)  
+          {  
+              <tr>  
+                  <td>@expense.ExpenseAmount</td>  
+                  <td>@expense.ExpenseDate.ToString("g")</td>  
+                  <td>@expense.Curency</td>  
+                  <td>@expense.Recurrin</td>  
+              </tr>  
+          }  
+      </tbody>  
+  </table>  
 
-@* <table class="table table-bordered"> *@
-@*     <thead> *@
-@*         <tr> *@
-@*             <th>Currency</th> *@
-@*             <th>Expense Amount</th> *@
-@*             <th>Date</th> *@
-@*             <th>Currency</th> *@
-@*             <th>Actions</th> *@
-@*         </tr> *@
-@*     </thead> *@
-@*     <tbody> *@
-@*         @foreach (var expense in Model) *@
-@*         { *@
-@*             <tr> *@
-@*                 <td>@expense.Curency</td> *@
-@*                 <td>@expense.ExpenseAmount</td> *@
-@*                 <td>@expense.ExpenseDate.ToShortDateString</td> *@
-@*                 <td> *@
-@*                     <a asp-action="Delete" asp-route-id="@expense.ExpenseId" class="btn btn-warning btn-sm">Delete</a> *@
-@*                 </td> *@
+  <table class="table table-bordered">  
+      <thead>  
+          <tr>  
+              <th>Currency</th>  
+              <th>Expense Amount</th>  
+              <th>Date</th>  
+              <th>Currency</th>  
+              <th>Actions</th>  
+          </tr>  
+      </thead>  
+      <tbody>  
+          @foreach (var expense in Model)  
+          {  
+              <tr>  
+                  <td>@expense.Curency</td>  
+                  <td>@expense.ExpenseAmount</td>  
+                  <td>@expense.ExpenseDate.ToShortDateString</td>  
+                  <td>  
+                      <a asp-action="Delete" asp-route-id="@expense.ExpenseId" class="btn btn-warning btn-sm">Delete</a>  
+                  </td>  
 
-@*             </tr> *@
-@*         } *@
-@*     </tbody> *@
-@* </table> *@
+             </tr>  
+         }  
+     </tbody>  
+ </table>  
 
-@* <a href="@Url.Action("Index", "Tracker")" class="btn btn-secondary">Back to Home</a> *@
+ <a href="@Url.Action("Index", "Tracker")" class="btn btn-secondary">Back to Home</a> 

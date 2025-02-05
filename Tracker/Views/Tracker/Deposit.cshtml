@@ -1,0 +1,17 @@
+﻿@model Tracker.Models.ViewModels.DepositViewModel
+
+@{
+    ViewData["Title"] = "Deposit";
+}
+
+<h1>Deposit</h1>
+
+
+<form asp-action="Deposit" method="post">
+    <div class="form-group">
+        <label asp-for="Amount">Deposit Amount</label>
+        <input asp-for="Amount" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="Amount" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Deposit</button>
+</form>

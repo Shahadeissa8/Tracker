@@ -6,6 +6,8 @@ using Tracker.Models.ViewModels;
 using Tracker.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using Tracker.Data;
+using Microsoft.AspNetCore.Http;
 
 namespace Tracker.Controllers
 {
@@ -13,14 +15,15 @@ namespace Tracker.Controllers
     public class AccountController : Controller
     {
         private UserManager<ApplicationUser> userManager;
-
         private SignInManager<ApplicationUser> signInManager;
         private readonly IWebHostEnvironment webHostEnvironment;
-        public AccountController(UserManager<ApplicationUser> _userManager, SignInManager<ApplicationUser> _signInManager, IWebHostEnvironment webHostEnvironment)
+        private ApplicationDbContext db;
+        public AccountController(UserManager<ApplicationUser> _userManager, SignInManager<ApplicationUser> _signInManager, IWebHostEnvironment webHostEnvironment, ApplicationDbContext _db)
         {
             userManager = _userManager;
             signInManager = _signInManager;
             this.webHostEnvironment = webHostEnvironment;
+            db = _db;
         }
         [HttpGet]
         [AllowAnonymous]
@@ -94,13 +97,17 @@ namespace Tracker.Controllers
         {
             var user = await userManager.GetUserAsync(User);
 
-            if (!User.Identity.IsAuthenticated || !signInManager.IsSignedIn(User))
+            if (user == null || !User.Identity.IsAuthenticated || !signInManager.IsSignedIn(User))
             {
-                RedirectToAction("Login");
+                return RedirectToAction("Index", "Home");
             }
+            HttpContext.Session.SetString("UserBalance", user.Amount!.ToString() ?? "0");
+
+            //HttpContext.Session.SetString("UserBalance", user.Amount.ToString());
+
             return View(user);
         }
-
+      
         [HttpGet]
         public async Task<IActionResult> EditProfile()
         {

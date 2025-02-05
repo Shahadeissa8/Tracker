@@ -53,42 +53,26 @@
                                     <span>@Model.Email</span>
                                 </div>
                                 <div class="teacher__rating">
-                                    <h5>Review:</h5>
+                                    <h5>Balance :</h5>
                                     <div class="teacher__rating-inner d-flex align-items-center">
                                         <ul>
                                             <li><a href="#"> <i class="icon_star"></i> </a></li>
-                                            <li><a href="#"> <i class="icon_star"></i> </a></li>
-                                            <li><a href="#"> <i class="icon_star"></i> </a></li>
-                                            <li><a href="#"> <i class="icon_star"></i> </a></li>
-                                            <li><a href="#"> <i class="icon_star"></i> </a></li>
+                                            <li><a href="#">  @Model.Name </a></li> @*Add Balance HERE  *@ 
+                                            @* <h5>@Context.Session.GetString("UserBalance"), balance: @Model.Amount KD</h5> *@
+                                            <h5>@Context.Session.GetString("UserBalance") KD</h5>
+
                                         </ul>
-                                        <p>4.5</p>
                                     </div>
                                 </div>
-                                <div class="teacher__social-2">
-                                    <h4>Follow Us:</h4>
-                                    <ul>
-                                        <li>
-                                            <a href="#">
-                                                <i class="social_facebook"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="social_twitter"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="social_vimeo"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="social_linkedin"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
+                                <div class="teacher__rating">
+                                    <h5>Mobile</h5>
+                                    <div class="teacher__rating-inner d-flex align-items-center">
+                                        <ul>
+                                            <li><a href="#">  @Model.PhoneNumber </a></li> @*Add Balance HERE  *@
+
+
+                                        </ul>
+                                    </div>
                                 </div>
                                 <div class="teacher__follow mb-5">
                                     <a asp-action="EditProfile" asp-controller="Account" class="teacher__follow-btn">Edit your profile  </a>
@@ -98,6 +82,7 @@
                                 <h3>Short Bio</h3>
                                 <p> FOR NOOR.</p>
                             </div>
+                           
                         </div>
                     </div>
                 </div>
