@@ -18,9 +18,9 @@ namespace Tracker.Models
         //public bool? Recurring { get; set; }
         [ForeignKey("ApplicationUser")]
         public string UserId { get; set; }//supposed to be string right? because in identity user it is a string
-        public string? ExpenseDes { get; set; }
+        public string? ExpenseDescription { get; set; }
         [Required(ErrorMessage = "Choose a category")]
         public Category Categories { get; set; }
-        public Recurrings Recurrin { get; set; }
+        public Recurrings Recurring { get; set; }
     }
 }

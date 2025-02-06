@@ -1,44 +1,187 @@
 ﻿@model SearchViewModel
 @{
-	ViewData["Title"] = "View Expenses";
+    ViewData["Title"] = "View Expenses";
 }
 
-<h1>View Expenses</h1>
+<!-- Stylesheets -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
 
+<style>
+    /* Custom Theme Colors */
+    .bg-gradient-primary {
+        background: linear-gradient(90deg, #1E3A8A, #0D6EFD); /* Blue Gradient */
+    }
 
-<table class="table table-bordered">
-	<tr>
-		<th>Name of expense</th>
-		<th>Expense Amount</th>
-		<th>Currency</th>
-		<th>Expense Date</th>
-		<th>Expense Discription</th>
-		<th>Expense Recurrance</th>
-	</tr>
-	@if (Model.ExpensesList != null && Model.ExpensesList.Any())
-	{
-		@foreach (var expense in Model.ExpensesList)
-		{
-			<tr>
-				<td>@expense.ExpenseName</td>
-				<td>@expense.ExpenseAmount</td>
-				<td>@expense.Curency</td>
-				<td>@expense.ExpenseDate</td>
-				<td>@expense.ExpenseDes</td>
-				<td>@expense.Recurrin</td>
-			</tr>
-		}
-	}
-	else
-		{
-			<tr>
-				<td colspan="6" class="text-center">No expenses found.</td>
-			</tr>
+    .text-orange {
+        color: #FFA500; /* Orange Text */
+    }
 
-		}
-	}
-</table>
+    .btn-orange {
+        background-color: #FFA500; /* Orange Button */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
 
-<div>
-	<a asp-action="Index" asp-controller="Home" class="btn btn-primary">Back to Home</a>
+        .btn-orange:hover {
+            background-color: #FF8C00; /* Darker Orange on Hover */
+        }
+
+    /* Table Styling */
+    .table-hover tbody tr:hover {
+        background-color: #f1f8ff; /* Light Blue Hover */
+    }
+
+    .table-bordered {
+        border-color: #ddd;
+    }
+
+    /* Alert Styling */
+    .alert-info {
+        background-color: #e6f7ff; /* Light Blue Background */
+        border-color: #91d5ff;
+        color: #1890ff;
+    }
+
+    /* Form Styling */
+    .form-control {
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Card Container */
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Search Input */
+    #myInput {
+        border: 2px solid #1E3A8A; /* Blue Border */
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Back Button */
+    .btn--radius-2 {
+        border-radius: 20px;
+        padding: 10px 20px;
+        font-weight: bold;
+    }
+
+    .btn--blue {
+        background-color: #1E3A8A;
+        color: white;
+        border: none;
+    }
+
+        .btn--blue:hover {
+            background-color: #162e6b; /* Darker Blue on Hover */
+        }
+</style>
+
+<!-- Main Content -->
+<div class="container mt-5">
+    <h1 class="text-center text-orange" style="font-size: 2.5rem; font-weight: bold;">View Expenses</h1>
+
+    <!-- Filter Section -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="text-primary">Filter Expenses</h4>
+            <form method="get" class="row g-3">
+                <div class="col-md-6">
+                    <label for="startDate" class="form-label">Start Date</label>
+                    <input type="date" class="form-control" id="startDate" name="StartDate" asp-for="FromDate" value="@Model.FromDate.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-6">
+                    <label for="endDate" class="form-label">End Date</label>
+                    <input type="date" class="form-control" id="endDate" name="EndDate" asp-for="ToDate" value="@Model.ToDate.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-6">
+                    <label for="minAmount" class="form-label">Min Amount</label>
+                    <input type="number" class="form-control" id="minAmount" name="minAmount" value="@ViewData["minAmount"]" />
+                </div>
+                <div class="col-md-6">
+                    <label for="maxAmount" class="form-label">Max Amount</label>
+                    <input type="number" class="form-control" id="maxAmount" name="maxAmount" value="@ViewData["maxAmount"]" />
+                </div>
+                <div class="col-12 text-center">
+                    <button type="submit" class="btn btn-orange btn-lg">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Remaining Budget Alert -->
+    <div class="alert alert-info text-center">
+        <strong>Remaining Budget:</strong> @Model.Amount
+    </div>
+
+    <!-- Search Bar -->
+    <div class="mb-4">
+        <input class="form-control" id="myInput" type="text" placeholder="Search expenses...">
+    </div>
+
+    <!-- Expense Table -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table id="myTable" class="table table-bordered table-hover">
+                <thead class="bg-gradient-primary text-white">
+                    <tr>
+                        <th>Name of Expense</th>
+                        <th>Expense Amount</th>
+                        <th>Currency</th>
+                        <th>Expense Date</th>
+                        <th>Expense Description</th>
+                        <th>Expense Recurrence</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.ExpensesList != null && Model.ExpensesList.Any())
+                    {
+                        @foreach (var expense in Model.ExpensesList)
+                        {
+                            <tr>
+                                <td>@expense.ExpenseName</td>
+                                <td>@expense.ExpenseAmount</td>
+                                <td>@expense.Curency</td>
+                                <td>@expense.ExpenseDate.ToString("yyyy-MM-dd")</td>
+                                <td>@expense.ExpenseDescription</td>
+                                <td>@expense.Recurring</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">No expenses found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+
+<!-- Back Button -->
+<div class="text-center mt-4">
+    <a asp-action="Index" asp-controller="Home" class="btn btn--radius-2 btn--blue">Back to Home</a>
+</div>
+
+<!-- Script for Search Filtering -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+    });
+</script>

@@ -43,9 +43,9 @@ namespace Tracker.Controllers
                     ExpenseDate = model.ExpenseDate,
                     Curency = model.Curency,
                     Categories = model.Categories,
-                    Recurrin = model.Recurrin,
+                    Recurring = model.Recurrin,
                     UserId = userId,
-                    ExpenseDes = model.ExpenseDescription
+                    ExpenseDescription = model.ExpenseDescription
                 };
                 db.Expenses.Add(expenses);
                 db.SaveChanges();
@@ -64,12 +64,12 @@ namespace Tracker.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var FindExpense = await db.Expenses.Where(Exp => Exp.UserId == userId).ToListAsync(); //change my transaction to the view expenses from mohammad
-            if (model.Amount < 0)  // Allowing 0 to mean "no filter"
+            var FindExpense = await db.Expenses.Where(Exp => Exp.UserId == userId).ToListAsync();
+            if (model.Amount < 0)
             {
-                ModelState.AddModelError(string.Empty, "Thereâ€™s no such expense with an invalid amount.");
-                return View(new SearchViewModel { ExpensesList = new List<Expense>() }); //again change this to the name of Mohammads view as well
-            }//IMPORTANT NOTE: the view is in my desktop, i will add it later after we finish correcting everything in this action and create the view (adding what mohammad adds)
+                ModelState.AddModelError(string.Empty, "There’s no such expense with an invalid amount.");
+                return View(new SearchViewModel { ExpensesList = new List<Expense>() });
+            }
             else if (model.Amount > 0)
             {
                 FindExpense = FindExpense.Where(Exp => Exp.ExpenseAmount == model.Amount).ToList();
@@ -77,9 +77,7 @@ namespace Tracker.Controllers
 
             if (!string.IsNullOrEmpty(model.SearchString))
             {
-                var matchedExpenses = FindExpense
-                    .Where(Exp => Exp.ExpenseName.Contains(model.SearchString) || Exp.ExpenseDes.Contains(model.SearchString))
-                    .ToList();
+                var matchedExpenses = FindExpense.Where(Exp => Exp.ExpenseName.Contains(model.SearchString)).ToList();
 
                 if (matchedExpenses.Any())
                 {
@@ -87,13 +85,13 @@ namespace Tracker.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Thereâ€™s no such expense matching the search criteria.");
+                    ModelState.AddModelError(string.Empty, "There’s no such expense matching the search criteria.");
                 }
             }
 
             if (model.FromDate == DateTime.MinValue || model.ToDate == DateTime.MinValue)
             {
-                ModelState.AddModelError(string.Empty, "Thereâ€™s no such expense with this date.");
+                ModelState.AddModelError(string.Empty, "There’s no such expense with this date.");
             }
             else if (model.FromDate != DateTime.MinValue && model.ToDate != DateTime.MinValue)
             {
@@ -103,10 +101,18 @@ namespace Tracker.Controllers
             var search = new SearchViewModel()
             {
                 ExpensesList = FindExpense.OrderByDescending(Exp => Exp.ExpenseDate).ToList()
-            };//to write everything in the view in a descending based on date
+            };
+
+            // Calculate the remaining budget
+            var remainingBudget = db.Budget.FirstOrDefault(b => b.UserId == userId)?.RemainingAmount ?? 0;
+
+            // Set the filtered expenses in the model
+            model.ExpensesList = search.ExpensesList;
+
+            // Pass the remaining budget via ViewData
+            ViewData["RemainingBudget"] = remainingBudget;
+
             return View(search);
-
-
         }
         public async Task<IActionResult> LatestTransactions()
         {
