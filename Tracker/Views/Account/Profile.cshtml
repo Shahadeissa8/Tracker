@@ -59,9 +59,8 @@
                                             <li><a href="#"> <i class="icon_star"></i> </a></li>
                                             <li><a href="#">  @Model.Name </a></li> @*Add Balance HERE  *@ 
                                             @* <h5>@Context.Session.GetString("UserBalance"), balance: @Model.Amount KD</h5> *@
-                                            <h5>@Context.Session.GetString("UserBalance") KD</h5>
+                                            <p>Initial Budget: @Model.Amount KD</p>
 
-                                        </ul>
                                     </div>
                                 </div>
                                 <div class="teacher__rating">
@@ -89,7 +88,6 @@
             </div>
         </section>
         <!-- instructor details area end -->
-
 
     </main>
     +

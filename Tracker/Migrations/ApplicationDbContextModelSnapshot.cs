@@ -257,7 +257,7 @@ namespace Tracker.Migrations
 
                     b.HasKey("BudgetId");
 
-                    b.ToTable("Budget");
+                    b.ToTable("Budget", (string)null);
                 });
 
             modelBuilder.Entity("Tracker.Models.Expense", b =>
@@ -294,7 +294,7 @@ namespace Tracker.Migrations
 
                     b.HasKey("ExpenseId");
 
-                    b.ToTable("Expenses");
+                    b.ToTable("Expenses", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

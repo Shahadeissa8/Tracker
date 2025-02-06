@@ -9,6 +9,6 @@ namespace Tracker.Models
         public Genders Gender { get; set; }
         public decimal Income { get; set; }
         public string? ProfilePicture { get; set; }
-        public decimal Amount { get; set; }
+        public decimal Amount { get; set; } = 0;
     }
 }

@@ -185,108 +185,37 @@ namespace Tracker.Controllers
 
             return View(filteredTransactions);
         }
-        //[HttpPost]
-        //[ValidateAntiForgeryToken] // CSRF protection
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    var expense = await db.Expenses.FindAsync(id);
-
-        //    if (expense == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    // Ensure that the user is the one who created the expense (security check)
-        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    if (expense.UserId != userId)
-        //    {
-        //        return Unauthorized();
-        //    }
-
-        //    db.Expenses.Remove(expense);
-        //    await db.SaveChangesAsync();
-
-        //    return RedirectToAction(nameof(LatestTransactions));
-        //}
-        public async Task<IActionResult> Deposit()
+        [HttpGet]
+        public IActionResult Deposit()
         {
+            return View(new DepositViewModel());
+        }
+        [HttpPost]
+        public async Task<IActionResult> Deposit(decimal amount)
+        {
+            if (amount <= 0)
+            {
+                ModelState.AddModelError("", "Invalid deposit amount.");
+                return View();
+            }
+
             var user = await userManager.GetUserAsync(User);
             if (user == null)
             {
-                return RedirectToAction("Home");  // Redirect to home if user is not found
+                return RedirectToAction("Login", "Account");
             }
 
-            // Initialize the DepositViewModel with the user's Id
-            DepositViewModel model = new DepositViewModel
+            user.Amount += amount; // Assuming "Balance" is a property in your user model
+
+            var result = await userManager.UpdateAsync(user);
+            if (result.Succeeded)
             {
-                UserId = user.Id,  // Set the user's Id to the model
-                Amount = 0      // Default the Amount to 0 for now, but allow the user to change it
-            };
-            return View(model);  // Return the view with the model
+                return RedirectToAction("Profile", "Account"); // Ensure Profile action exists
+            }
+
+            ModelState.AddModelError("", "Deposit failed. Try again.");
+            return View();
+
         }
-        [HttpPost]
-        public async Task<IActionResult> Deposit(DepositViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);  // Return to the same view with validation errors
-            }
-
-            // Retrieve the user by UserId
-            var user = await userManager.FindByIdAsync(model.UserId);
-            if (user == null)
-            {
-                return RedirectToAction("Home");  // If user is not found, redirect
-            }
-
-            // Get the Budget for the user (if it exists)
-            var budget = await db.Budget.FirstOrDefaultAsync(b => b.UserId == model.UserId);
-
-            // If no budget exists for the user, you can create a new one.
-            if (budget == null)
-            {
-                budget = new Budget
-                {
-                    UserId = model.UserId,
-                    Amount = 0,  // Initialize with 0 amount
-                    RemainingAmount = 0, // Initialize remaining amount as 0
-                };
-
-                db.Budget.Add(budget);  // Add new budget to the database
-            }
-
-            // Add the deposit amount to the current budget amount
-            budget.Amount += model.Amount;
-
-            // Save the changes to the budget in the database
-            await db.SaveChangesAsync();
-            db.Update(model);
-            // Redirect to the user's profile or another page
-            return RedirectToAction("Profile");
-        }
-
-        //[HttpPost]
-        //public async Task<IActionResult> Deposit(DepositViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(model);  // Return to the same view with validation errors
-        //    }
-
-        //    // Retrieve the user by UserId
-        //    var user = await userManager.FindByIdAsync(model.UserId);
-        //    if (user == null)
-        //    {
-        //        return RedirectToAction("Home");  // If user is not found, redirect
-        //    }
-        //    // Update the user's balance by adding the deposit amount
-        //    Budget.am += model.Amount;
-        //    // Save the changes to the user balance in the database
-        //    await db.SaveChangesAsync();
-
-        //    // Redirect to the user's profile or another page
-        //    return RedirectToAction("Profile");
-        //}
     }
 }
-
