@@ -1,74 +1,124 @@
 ﻿@model ExpenseViewModel
-
 @{
     ViewData["Title"] = "Add Expense";
 }
+<h1 class="text-center text-gradient" style="font-size: 2.5rem; font-weight: bold;">Add Expense</h1>
 
-<h1>Add Expense</h1>
 
-<h4>Expense</h4>
-<div class="row">
-	<div class="col-md-4">
 
-		<form method="post" asp-action="AddExpense">
-			<div asp-validation-summary="All" class="text-danger"></div>
-			<div class="text text-center">
-				<tr>
-					<th>
-						<label asp-for="ExpenseName" class="control-label"></label>
-					<td>
-						<input asp-for="ExpenseName" class="form-control" />
-						<span asp-validation-for="ExpenseName" class="text-danger"></span>
-					</td>
-				</tr>
-				<tr>
-					<th>
-						<label asp-for="ExpenseAmount" class="control-label"></label>
-					<td>
-						<input asp-for="ExpenseAmount" class="form-control" />
-						<span asp-validation-for="ExpenseAmount" class="text-danger"></span>
-					</td>
-				</tr>
-				<tr>
-					<th>
-						<label asp-for="ExpenseDescription" class="control-label"></label>
-					<td>
-						<input asp-for="ExpenseDescription" class="form-control" />
-						<span asp-validation-for="ExpenseDescription" class="text-danger"></span>
-					</td>
-				</tr>
-				<tr>
-					<th>
-						<label asp-for="ExpenseDate" class="control-label"></label>
-					</th>
-					<input asp-for="ExpenseDate" class="form-control" />
-					<span asp-validation-for="ExpenseDate" class="text-danger"></span>
-					<th>
-				</tr>
-				<tr>
-					<label asp-for="Curency" class="control-label"></label>
-					<select asp-for="Curency" class="form-control" asp-items="Html.GetEnumSelectList<EnumsList.Currencies>()">
-						<option value="-1">------------ Select a currency ----------</option>
-					</select>
-				</tr>
 
-				<tr>
-					<label asp-for="Categories" class="control-label"></label>
-					<select asp-for="Categories" class="form-control" asp-items="Html.GetEnumSelectList<EnumsList.Category>()">
-						<option value="-1">------------ Select a category ----------</option>
-					</select>
-				</tr>
-				<tr>
-					<th>
-						<label asp-for="Recurring"></label>
-					</th>
-					<td><input asp-for="Recurring" class="form-check-input" /></td>
-				</tr>
-				<tr><input type="submit" value="Create" class="btn btn-primary" /></tr>
-			</div>
-		</form>
-	</div>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <form method="post" asp-action="AddExpense">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <!-- Enhanced Table-Like Layout -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <th scope="row" class="bg-gradient-warning text-white py-3 px-4 rounded-start">
+                                    <label asp-for="ExpenseName" class="control-label mb-0"></label>
+                                </th>
+                                <td class="py-3 px-4">
+                                    <input asp-for="ExpenseName" class="form-control form-control-lg shadow-sm" />
+                                    <span asp-validation-for="ExpenseName" class="text-danger small"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="bg-gradient-warning text-white py-3 px-4 rounded-start">
+                                    <label asp-for="ExpenseAmount" class="control-label mb-0"></label>
+                                </th>
+                                <td class="py-3 px-4">
+                                    <input asp-for="ExpenseAmount" class="form-control form-control-lg shadow-sm" />
+                                    <span asp-validation-for="ExpenseAmount" class="text-danger small"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="bg-gradient-warning text-white py-3 px-4 rounded-start">
+                                    <label asp-for="ExpenseDescription" class="control-label mb-0"></label>
+                                </th>
+                                <td class="py-3 px-4">
+                                    <input asp-for="ExpenseDescription" class="form-control form-control-lg shadow-sm" />
+                                    <span asp-validation-for="ExpenseDescription" class="text-danger small"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="bg-gradient-warning text-white py-3 px-4 rounded-start">
+                                    <label asp-for="ExpenseDate" class="control-label mb-0"></label>
+                                </th>
+                                <td class="py-3 px-4">
+                                    <input asp-for="ExpenseDate" class="form-control form-control-lg shadow-sm" />
+                                    <span asp-validation-for="ExpenseDate" class="text-danger small"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="bg-gradient-warning text-white py-3 px-4 rounded-start">
+                                    <label asp-for="Curency" class="control-label mb-0"></label>
+                                </th>
+                                <td class="py-3 px-4">
+                                    <select asp-for="Curency" class="form-select form-control-lg shadow-sm">
+                                        <option value="-1">------------ Select a currency ----------</option>
+                                        @foreach (var item in Html.GetEnumSelectList<EnumsList.Currencies>())
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="bg-gradient-warning text-white py-3 px-4 rounded-start">
+                                    <label asp-for="Categories" class="control-label mb-0"></label>
+                                </th>
+                                <td class="py-3 px-4">
+                                    <select asp-for="Categories" class="form-select form-control-lg shadow-sm">
+                                        <option value="-1">------------ Select a category ----------</option>
+                                        @foreach (var item in Html.GetEnumSelectList<EnumsList.Category>())
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="bg-gradient-warning text-white py-3 px-4 rounded-start">
+                                    <label asp-for="Recurrin" class="control-label mb-0"></label>
+                                </th>
+                                <td class="py-3 px-4">
+                                    <select asp-for="Recurrin" class="form-select form-control-lg shadow-sm">
+                                        <option value="-1">------------ Select a recurring? ----------</option>
+                                        @foreach (var item in Html.GetEnumSelectList<EnumsList.Recurrings>())
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="bg-gradient-warning text-white py-3 px-4 rounded-start">
+                                    <label asp-for="Recurring" class="control-label mb-0"></label>
+                                </th>
+                                <td class="py-3 px-4">
+                                    <div class="form-check form-switch">
+                                        <input asp-for="Recurring" class="form-check-input" type="checkbox" role="switch" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Submit Button -->
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg shadow-lg">Create</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
-<div>
-	<a asp-action="ViewExpenses" asp-controller="Tracker" class="btn btn-primary">Back to List</a>
+
+<!-- Back to List Button -->
+<div class="text-center mt-4">
+    <a asp-action="ViewExpenses" asp-controller="Tracker" class="btn btn-outline-primary btn-lg shadow">Back to List</a>
 </div>

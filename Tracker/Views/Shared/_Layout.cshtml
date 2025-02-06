@@ -1,5 +1,6 @@
-@using Microsoft.AspNetCore.Identity;
-@inject SignInManager<ApplicationUser> signInManager;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> signInManager
+@inject UserManager<ApplicationUser> userManager
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,15 +15,14 @@
 	<link rel="stylesheet" href="../wwwroot/assets1/css/style.css" />
 	<link rel="stylesheet" href="~/dist/css/style.css">
 
-
 </head>
 <body>
-
 	<header class="main-header position-fixed w-100">
 		<div class="container">
+
 			<nav class="navbar navbar-expand-xl py-0">
 				<div class="logo">
-					<a class="navbar-brand py-0 me-0" href="#"><img src="../assets/images/sasscandy-logo.svg" alt=""></a>
+					<a class="navbar-brand py-0 me-0" href="#"><img src="~\wwwroot\assets\images\image.png" alt=""></a>
 				</div>
 				<a class="d-inline-block d-lg-block d-xl-none d-xxl-none  nav-toggler text-decoration-none" data-bs-toggle="offcanvas" href="#offcanvasExample" aria-controls="offcanvasExample">
 					<i class="ti ti-menu-2 text-warning"></i>
@@ -43,6 +43,7 @@
 						}
 					</ul>
 
+					
 					<!-- Right-aligned buttons (Log Out, Register, Log In) -->
 					<div class="d-flex ms-auto align-items-center">
 						@if (signInManager.IsSignedIn(User))
@@ -55,13 +56,26 @@
 						else
 						{
 							@if (ViewData["CurrentPage"]?.ToString() != "Login" && ViewData["CurrentPage"]?.ToString() != "Register")
-							{
-								<li class="nav-item">
-									<a asp-controller="Account" asp-action="Login" class="btn btn-warning btn-hover-secondery text-capitalize">Login</a>
-								</li>
-								<li class="nav-item">
-									<a asp-controller="Account" asp-action="Register" class="btn btn-warning btn-hover-secondery text-capitalize">Register</a>
-
+							{@if (User.Identity.IsAuthenticated)
+								{
+									<li class="nav-item">
+										<a asp-area="" asp-controller="Tracker" asp-action="AddExpense" class="nav-link text-capitalize">Add Expenses</a>
+									</li>
+									<li class="nav-item">
+										<a asp-area="" asp-controller="Tracker" asp-action="ViewExpenses" class="nav-link text-capitalize">View Expenses</a>
+									</li>
+									<li class="nav-item">
+										<a asp-controller="Account" asp-action="Profile" class="nav-link text-capitalize">Profile</a>
+									</li>
+									<form asp-action="ConfirmLogout" asp-controller="Account" method="post">
+										<input type="submit" class="btn btn-warning btn-hover-secondery text-capitalize" value="Logout" />
+									</form>
+								}
+								else
+								{
+									<a asp-controller="Account" asp-action="Login" class="btn btn-warning">Login</a>
+									<a asp-controller="Account" asp-action="Register" class="btn btn-warning">Register</a>
+								}
 
 									@* <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel"> *@
 									@* 	<div class="offcanvas-header"> *@
@@ -93,7 +107,7 @@
 									@* 		</div> *@
 									@* 	</div> *@
 									@* </div> *@
-								</li>
+								
 							}
 							<!-- Register and Log In buttons -->
 						}
@@ -149,7 +163,7 @@
 			<div class="row">
 				<div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 col-sm-12">
 					<div class="footer-logo-col">
-						<a href="#"><img src="../assets/images/footer/Logo.svg"></a>
+						
 						<p class="blue-light mb-0 fs-7 fw-500">
 							Your simple, elegant, and secure way to track and manage your personal finances.
 						</p>
