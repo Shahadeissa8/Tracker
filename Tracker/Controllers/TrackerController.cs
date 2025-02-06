@@ -43,70 +43,91 @@ namespace Tracker.Controllers
                     ExpenseDate = model.ExpenseDate,
                     Curency = model.Curency,
                     Categories = model.Categories,
-                    Recurring = model.Recurring,
+                    Recurrin = model.Recurrin,
                     UserId = userId,
-                    ExpenseDescription = model.ExpenseDescription
+                    ExpenseDes = model.ExpenseDescription
                 };
                 db.Expenses.Add(expenses);
                 db.SaveChanges();
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("ViewExpenses");
             }
             return View(model);
         }
 
-        //the search action
-        public async Task<IActionResult> ViewExpenses(SearchViewModel model)
+        public async Task<IActionResult> ViewExpenses()
         {
             var userId = userManager.GetUserId(User);
-            if (userId == null || string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(userId))
             {
                 return RedirectToAction("Login", "Account");
             }
 
-            var FindExpense = await db.Expenses.Where(Exp => Exp.UserId == userId).ToListAsync(); //change my transaction to the view expenses from mohammad
-            if (model.Amount < 0)  // Allowing 0 to mean "no filter"
-            {
-                ModelState.AddModelError(string.Empty, "There’s no such expense with an invalid amount.");
-                return View(new SearchViewModel { ExpensesList = new List<Expense>() }); //again change this to the name of Mohammads view as well
-            }//IMPORTANT NOTE: the view is in my desktop, i will add it later after we finish correcting everything in this action and create the view (adding what mohammad adds)
-            else if (model.Amount > 0)
-            {
-                FindExpense = FindExpense.Where(Exp => Exp.ExpenseAmount == model.Amount).ToList();
-            }
+            // Fetching and ordering expenses by date (newest first)
+            var expenses = await db.Expenses
+                .Where(exp => exp.UserId == userId)
+                .OrderByDescending(exp => exp.ExpenseDate)
+                .ToListAsync();
 
-            if (!string.IsNullOrEmpty(model.SearchString))
+            var viewModel = new SearchViewModel
             {
-                var matchedExpenses = FindExpense
-                    .Where(Exp => Exp.ExpenseName.Contains(model.SearchString) || Exp.ExpenseDescription.Contains(model.SearchString))
-                    .ToList();
+                ExpensesList = expenses
+            };
 
-                if (matchedExpenses.Any())
-                {
-                    FindExpense = matchedExpenses;
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "There’s no such expense matching the search criteria.");
-                }
-            }
-
-            if (model.FromDate == DateTime.MinValue || model.ToDate == DateTime.MinValue)
-            {
-                ModelState.AddModelError(string.Empty, "There’s no such expense with this date.");
-            }
-            else if (model.FromDate != DateTime.MinValue && model.ToDate != DateTime.MinValue)
-            {
-                FindExpense = FindExpense.Where(Exp => Exp.ExpenseDate.Date >= model.FromDate && Exp.ExpenseDate.Date <= model.ToDate).ToList();
-            }
-
-            var search = new SearchViewModel()
-            {
-                ExpensesList = FindExpense.OrderByDescending(Exp => Exp.ExpenseDate).ToList()
-            };//to write everything in the view in a descending based on date
-            return View(search);
-
-
+            return View(viewModel);
         }
+        ////the search action
+        //public async Task<IActionResult> ViewExpenses(SearchViewModel model)
+        //{
+        //    var userId = userManager.GetUserId(User);
+        //    if (userId == null || string.IsNullOrEmpty(userId))
+        //    {
+        //        return RedirectToAction("Login", "Account");
+        //    }
+
+        //    var FindExpense = await db.Expenses.Where(Exp => Exp.UserId == userId).ToListAsync(); //change my transaction to the view expenses from mohammad
+        //    if (model.Amount < 0)  // Allowing 0 to mean "no filter"
+        //    {
+        //        ModelState.AddModelError(string.Empty, "There’s no such expense with an invalid amount.");
+        //        return View(new SearchViewModel { ExpensesList = new List<Expense>() }); //again change this to the name of Mohammads view as well
+        //    }//IMPORTANT NOTE: the view is in my desktop, i will add it later after we finish correcting everything in this action and create the view (adding what mohammad adds)
+        //    else if (model.Amount > 0)
+        //    {
+        //        FindExpense = FindExpense.Where(Exp => Exp.ExpenseAmount == model.Amount).ToList();
+        //    }
+
+        //    if (!string.IsNullOrEmpty(model.SearchString))
+        //    {
+        //        var matchedExpenses = FindExpense
+        //            .Where(Exp => Exp.ExpenseName.Contains(model.SearchString) || Exp.ExpenseDes.Contains(model.SearchString))
+        //            .ToList();
+
+        //        if (matchedExpenses.Any())
+        //        {
+        //            FindExpense = matchedExpenses;
+        //        }
+        //        else
+        //        {
+        //            ModelState.AddModelError(string.Empty, "There’s no such expense matching the search criteria.");
+        //        }
+        //    }
+
+        //    if (model.FromDate == DateTime.MinValue || model.ToDate == DateTime.MinValue)
+        //    {
+        //        ModelState.AddModelError(string.Empty, "There’s no such expense with this date.");
+        //    }
+        //    else if (model.FromDate != DateTime.MinValue && model.ToDate != DateTime.MinValue)
+        //    {
+        //        FindExpense = FindExpense.Where(Exp => Exp.ExpenseDate.Date >= model.FromDate && Exp.ExpenseDate.Date <= model.ToDate).ToList();
+        //    }
+
+        //    var search = new SearchViewModel()
+        //    {
+        //        ExpensesList = FindExpense.OrderByDescending(Exp => Exp.ExpenseDate).ToList()
+        //    };//to write everything in the view in a descending based on date
+        //    return View(search);
+
+
+        //}
         public async Task<IActionResult> LatestTransactions()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -164,30 +185,37 @@ namespace Tracker.Controllers
 
             return View(filteredTransactions);
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken] // CSRF protection
-        public async Task<IActionResult> Delete(int id)
+        [HttpGet]
+        public IActionResult Deposit()
         {
-            var expense = await db.Expenses.FindAsync(id);
-
-            if (expense == null)
-            {
-                return NotFound();
-            }
-
-            // Ensure that the user is the one who created the expense (security check)
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (expense.UserId != userId)
-            {
-                return Unauthorized();
-            }
-
-            db.Expenses.Remove(expense);
-            await db.SaveChangesAsync();
-
-            return RedirectToAction(nameof(LatestTransactions));
+            return View(new DepositViewModel());
         }
+        [HttpPost]
+        public async Task<IActionResult> Deposit(decimal amount)
+        {
+            if (amount <= 0)
+            {
+                ModelState.AddModelError("", "Invalid deposit amount.");
+                return View();
+            }
 
+            var user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            user.Amount += amount; // Assuming "Balance" is a property in your user model
+
+            var result = await userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Profile", "Account"); // Ensure Profile action exists
+            }
+
+            ModelState.AddModelError("", "Deposit failed. Try again.");
+            return View();
+
+        }
     }
 }
-

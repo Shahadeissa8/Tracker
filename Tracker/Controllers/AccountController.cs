@@ -6,21 +6,24 @@ using Tracker.Models.ViewModels;
 using Tracker.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using Tracker.Data;
+using Microsoft.AspNetCore.Http;
 
 namespace Tracker.Controllers
 {
-    // [Authorize]
+     [Authorize]
     public class AccountController : Controller
     {
         private UserManager<ApplicationUser> userManager;
-
         private SignInManager<ApplicationUser> signInManager;
         private readonly IWebHostEnvironment webHostEnvironment;
-        public AccountController(UserManager<ApplicationUser> _userManager, SignInManager<ApplicationUser> _signInManager, IWebHostEnvironment webHostEnvironment)
+        private ApplicationDbContext db;
+        public AccountController(UserManager<ApplicationUser> _userManager, SignInManager<ApplicationUser> _signInManager, IWebHostEnvironment webHostEnvironment, ApplicationDbContext _db)
         {
             userManager = _userManager;
             signInManager = _signInManager;
             this.webHostEnvironment = webHostEnvironment;
+            db = _db;
         }
         [HttpGet]
         [AllowAnonymous]
@@ -29,7 +32,6 @@ namespace Tracker.Controllers
             ViewData["CurrentPage"] = "Register";
             return View();
         }
-
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -40,29 +42,29 @@ namespace Tracker.Controllers
                 ApplicationUser user = new ApplicationUser()
                 {
                     Name = model.Name,
-                    UserName = model.Email, // REQUIRED
+                    UserName = model.Email,
                     Email = model.Email,
                     PhoneNumber = model.Mobile,
                     Gender = model.Gender,
-                    ProfilePicture = uniqueFileName
+                    ProfilePicture = uniqueFileName,
+                    Amount = model.Budget 
                 };
 
                 var result = await userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     await signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Profile", "Account");
                 }
 
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
-                    Console.WriteLine(error.Description); // Debugging
                 }
-                return View(model);
             }
             return View(model);
         }
+
         [AllowAnonymous]
         [HttpGet]
         public IActionResult Login()
@@ -70,6 +72,7 @@ namespace Tracker.Controllers
             ViewData["CurrentPage"] = "Login";
             return View();
         }
+
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -87,25 +90,25 @@ namespace Tracker.Controllers
             }
             return View();
         }
-        [Authorize]
+        
         [HttpGet]
         public async Task<IActionResult> Profile()
         {
             var user = await userManager.GetUserAsync(User);
 
-            if (!User.Identity.IsAuthenticated || !signInManager.IsSignedIn(User))
+            if (user == null || !User.Identity.IsAuthenticated || !signInManager.IsSignedIn(User))
             {
-                RedirectToAction("Login");
+                return RedirectToAction("Index", "Home");
             }
+            //HttpContext.Session.SetString("UserBalance", user.Amount!.ToString() ?? "0");
+
+
             return View(user);
         }
-
+      
         [HttpGet]
         public async Task<IActionResult> EditProfile()
         {
-
-
-            // var user = await userManager.FindByIdAsync(id);
             var user = await userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -138,11 +141,6 @@ namespace Tracker.Controllers
                 user.PhoneNumber = model.Mobile;
                 user.Gender = model.Gender;
 
-                //if (model.ProfileImage != null)
-                //{
-                //    string uniqueFile = UploadedFile(model.ProfileImage);
-                //    user.ProfilePicture = uniqueFile;
-                //}
                 var result = await userManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {
@@ -170,22 +168,6 @@ namespace Tracker.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        //private string UploadedFile(IFormFile file)
-        //{
-        //    string uniqueFileName = null;
-
-        //    if (file != null)
-        //    {
-        //        string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "Uploads");
-        //        uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-        //        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-        //        using (var fileStream = new FileStream(filePath, FileMode.Create))
-        //        {
-        //            file.CopyTo(fileStream);
-        //        }
-        //    }
-        //    return uniqueFileName;
-        //}
         private string UploadedFile(RegisterViewModel model)
         {
             string uniqueFileName = null;

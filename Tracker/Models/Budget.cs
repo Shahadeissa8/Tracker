@@ -11,6 +11,7 @@ namespace Tracker.Models
 
         [ForeignKey("ApplicationUser")]
         public string UserId { get; set; }  
+        public decimal Amount { get; set; }
     }
 }
 /////jkjjkj

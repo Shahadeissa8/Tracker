@@ -12,8 +12,8 @@ using Tracker.Data;
 namespace Tracker.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250203181357_all")]
-    partial class all
+    [Migration("20250205055328_fixesRecurring")]
+    partial class fixesRecurring
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -211,6 +211,7 @@ namespace Tracker.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ProfilePicture")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
@@ -236,6 +237,27 @@ namespace Tracker.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Tracker.Models.Budget", b =>
+                {
+                    b.Property<Guid>("BudgetId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Categories")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("RemainingAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("BudgetId");
+
+                    b.ToTable("Budget");
+                });
+
             modelBuilder.Entity("Tracker.Models.Expense", b =>
                 {
                     b.Property<Guid>("ExpenseId")
@@ -254,7 +276,7 @@ namespace Tracker.Migrations
                     b.Property<DateTime>("ExpenseDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ExpenseDescription")
+                    b.Property<string>("ExpenseDes")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ExpenseName")
