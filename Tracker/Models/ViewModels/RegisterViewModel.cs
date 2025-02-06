@@ -32,5 +32,9 @@ namespace Tracker.Models.ViewModels
         public string? Mobile { get; set; }
         [Display(Name = "Profile Picture")]
         public IFormFile? ProfileImage { get; set; }
+        [Required(ErrorMessage = "Enter Your Budget")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Amount must be greater than zero")]
+        public decimal Budget { get; set; } // Add this
+
     }
 }

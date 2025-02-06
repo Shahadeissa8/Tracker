@@ -30,7 +30,7 @@ namespace Tracker.Controllers
             return View();
         }
 
-        [HttpPost]
+    [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
@@ -40,29 +40,29 @@ namespace Tracker.Controllers
                 ApplicationUser user = new ApplicationUser()
                 {
                     Name = model.Name,
-                    UserName = model.Email, // REQUIRED
+                    UserName = model.Email,
                     Email = model.Email,
                     PhoneNumber = model.Mobile,
                     Gender = model.Gender,
-                    ProfilePicture = uniqueFileName
+                    ProfilePicture = uniqueFileName,
+                    Amount = model.Budget 
                 };
 
                 var result = await userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     await signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Profile", "Account");
                 }
 
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
-                    Console.WriteLine(error.Description); // Debugging
                 }
-                return View(model);
             }
             return View(model);
         }
+
         [AllowAnonymous]
         [HttpGet]
         public IActionResult Login()

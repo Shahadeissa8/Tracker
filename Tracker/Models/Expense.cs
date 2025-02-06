@@ -21,6 +21,7 @@ namespace Tracker.Models
         public string? ExpenseDescription { get; set; }
         [Required(ErrorMessage = "Choose a category")]
         public Category Categories { get; set; }
+        public Recurrings Recurrin { get; set; }
 
     }
 }

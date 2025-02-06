@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Tracker.Migrations
 {
     /// <inheritdoc />
-    public partial class all : Migration
+    public partial class hnucdhacsd : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,6 +34,7 @@ namespace Tracker.Migrations
                     Gender = table.Column<int>(type: "int", nullable: false),
                     Income = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ProfilePicture = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -55,6 +56,21 @@ namespace Tracker.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Budget",
+                columns: table => new
+                {
+                    BudgetId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RemainingAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Categories = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Budget", x => x.BudgetId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Expenses",
                 columns: table => new
                 {
@@ -66,7 +82,8 @@ namespace Tracker.Migrations
                     Recurring = table.Column<bool>(type: "bit", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ExpenseDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Categories = table.Column<int>(type: "int", nullable: false)
+                    Categories = table.Column<int>(type: "int", nullable: false),
+                    Recurrin = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -236,6 +253,9 @@ namespace Tracker.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Budget");
 
             migrationBuilder.DropTable(
                 name: "Expenses");

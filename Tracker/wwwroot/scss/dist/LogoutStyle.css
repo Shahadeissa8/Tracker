@@ -1,0 +1,23 @@
+﻿.custom3 {
+    background-color: orange;
+}
+
+.btn {
+    display: inline-block;
+    line-height: 50px;
+    padding: 0 50px;
+    transition: all 0.4s ease;
+    color: #fff;
+    font-family: "Poppins", "Arial", "Helvetica Neue", "sans-serif";
+    border-radius: 15px;
+}
+
+    .btn:hover {
+        color: var(--bs-btn-hover-color);
+        background-color: var(--bs-btn-hover-bg);
+        border-color: var(--bs-btn-hover-border-color);
+    }
+
+.form-control, .btn {
+    font-size: 1.1rem;
+}

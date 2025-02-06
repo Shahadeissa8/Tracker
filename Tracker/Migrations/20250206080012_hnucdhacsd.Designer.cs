@@ -12,8 +12,8 @@ using Tracker.Data;
 namespace Tracker.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250203181357_all")]
-    partial class all
+    [Migration("20250206080012_hnucdhacsd")]
+    partial class hnucdhacsd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -166,6 +166,9 @@ namespace Tracker.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -236,6 +239,30 @@ namespace Tracker.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Tracker.Models.Budget", b =>
+                {
+                    b.Property<Guid>("BudgetId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Categories")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("RemainingAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("BudgetId");
+
+                    b.ToTable("Budget");
+                });
+
             modelBuilder.Entity("Tracker.Models.Expense", b =>
                 {
                     b.Property<Guid>("ExpenseId")
@@ -260,6 +287,9 @@ namespace Tracker.Migrations
                     b.Property<string>("ExpenseName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Recurrin")
+                        .HasColumnType("int");
 
                     b.Property<bool?>("Recurring")
                         .HasColumnType("bit");

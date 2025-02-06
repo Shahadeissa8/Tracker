@@ -10,6 +10,8 @@ namespace Tracker.Models
         public Category Categories { get; set; }
 
         [ForeignKey("ApplicationUser")]
-        public string UserId { get; set; }  
+        public string UserId { get; set; }
+        public decimal Amount { get; set; }
+
     }
 }

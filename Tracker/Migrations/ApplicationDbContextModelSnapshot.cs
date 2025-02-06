@@ -163,6 +163,9 @@ namespace Tracker.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -208,7 +211,6 @@ namespace Tracker.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ProfilePicture")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
@@ -239,6 +241,9 @@ namespace Tracker.Migrations
                     b.Property<Guid>("BudgetId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Categories")
                         .HasColumnType("int");
@@ -279,6 +284,9 @@ namespace Tracker.Migrations
                     b.Property<string>("ExpenseName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Recurrin")
+                        .HasColumnType("int");
 
                     b.Property<bool?>("Recurring")
                         .HasColumnType("bit");

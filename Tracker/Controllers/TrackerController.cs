@@ -165,19 +165,19 @@ namespace Tracker.Controllers
             return View(filteredTransactions);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken] // CSRF protection
-        public async Task<IActionResult> Delete(int id)
+        [ValidateAntiForgeryToken]
+        [Route("Tracker/Delete/{expenseId:guid}")]
+        public async Task<IActionResult> Delete(Guid expenseId)
         {
-            var expense = await db.Expenses.FindAsync(id);
+            var expense = await db.Expenses.FindAsync(expenseId);
 
             if (expense == null)
             {
                 return NotFound();
             }
 
-            // Ensure that the user is the one who created the expense (security check)
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (expense.UserId != userId)
+            var user = await userManager.GetUserAsync(User);
+            if (user == null || expense.UserId != user.Id)
             {
                 return Unauthorized();
             }
@@ -185,9 +185,40 @@ namespace Tracker.Controllers
             db.Expenses.Remove(expense);
             await db.SaveChangesAsync();
 
-            return RedirectToAction(nameof(LatestTransactions));
+            return RedirectToAction("ViewExpenses");
         }
 
+        [HttpGet]
+        public IActionResult Deposit()
+        {
+            return View(new DepositViewModel());
+        }
+        [HttpPost]
+        public async Task<IActionResult> Deposit(decimal amount)
+        {
+            if (amount <= 0)
+            {
+                ModelState.AddModelError("", "Invalid deposit amount.");
+                return View();
+            }
+
+            var user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            user.Amount += amount; // Assuming "Balance" is a property in your user model
+
+            var result = await userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Profile", "Account"); // Ensure Profile action exists
+            }
+
+            ModelState.AddModelError("", "Deposit failed. Try again.");
+            return View();
+
+        }
     }
 }
-
