@@ -91,7 +91,7 @@ namespace Tracker.Controllers
                 }
                 if (model.Recurring)
                 {
-                    return RedirectToAction("ViewExpense", "Tracker"); 
+                    return RedirectToAction("ViewExpenses", "Tracker"); 
                 }
                 else
                 {
@@ -213,29 +213,20 @@ namespace Tracker.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(Guid expenseId)
         {
-
             var expense = await db.Expenses.FindAsync(expenseId);
-
             if (expense == null)
             {
 
                 return NotFound();
             }
-
-
             var user = await userManager.GetUserAsync(User);
             if (expense.UserId != user.Id)
             {
 
                 return Unauthorized();
             }
-
             db.Expenses.Remove(expense);
-
-
             await db.SaveChangesAsync();
-
-
             return RedirectToAction("ViewExpenses");
         }
 

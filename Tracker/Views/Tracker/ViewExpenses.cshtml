@@ -1,170 +1,150 @@
 ﻿@model SearchViewModel
 @{
+    ViewData["Title"] = "View Expenses";
 }
 
 <!-- Stylesheets -->
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
 
 <style>
-    /* Custom Theme Colors */
-    .bg-gradient-primary {
-        background: linear-gradient(90deg, #1E3A8A, #0D6EFD); /* Blue Gradient */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
     }
 
-    .text-orange {
-        color: #FFA500; /* Orange Text */
-    }
-
-    .btn-orange {
-        background-color: #FFA500; /* Orange Button */
+    .bg-bank-primary {
+        background: linear-gradient(90deg, #002147, #007bff);
         color: white;
-        border: none;
-        border-radius: 5px;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
-        .btn-orange:hover {
-            background-color: #FF8C00; /* Darker Orange on Hover */
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    .text-accent {
+        color: #ff6f00;
+    }
+
+    .btn-accent {
+        background-color: #ff6f00;
+        color: white;
+        border-radius: 8px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        padding: 12px 24px;
+    }
+
+        .btn-accent:hover {
+            background-color: #e65c00;
         }
 
-    .btn-blue {
-        background-color: #1E3A8A; /* Blue Button */
-        color: white;
+    .card-custom {
         border: none;
-        border-radius: 5px;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        background-color: white;
+        padding: 20px;
     }
 
-        .btn-blue:hover {
-            background-color: #162e6b; /* Darker Blue on Hover */
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-        }
-
-    /* Table Styling */
     .table-hover tbody tr:hover {
-        background-color: #f1f8ff; /* Light Blue Hover */
+        background-color: #e3f2fd;
     }
 
-    .table-bordered {
-        border-color: #ddd;
-    }
-
-    /* Alert Styling */
-    .alert-info {
-        background-color: #e6f7ff; /* Light Blue Background */
-        border-color: #91d5ff;
-        color: #1890ff;
-        border-radius: 5px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Card Container */
-    .card {
-        border: none;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Search Input */
-    #myInput {
-        border: 2px solid #1E3A8A; /* Blue Border */
-        border-radius: 5px;
-        padding: 10px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Back Button */
-    .btn--radius-2 {
-        border-radius: 20px;
-        padding: 10px 20px;
+    .table thead {
+        background: #002147;
+        color: white;
         font-weight: bold;
     }
 
-    .btn--blue {
-        background-color: #1E3A8A;
-        color: coral;
-        border: none;
+    .table th, .table td {
+        padding: 16px;
+        text-align: center;
     }
 
-        .btn--blue:hover {
-            background-color: #162e6b; /* Darker Blue on Hover */
-        }
+    .alert-info {
+        background-color: #cce5ff;
+        border-color: #99c2ff;
+        color: #004085;
+        font-weight: bold;
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    #myInput {
+        border: 2px solid #007bff;
+        border-radius: 8px;
+        padding: 12px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        width: 100%;
+    }
 </style>
 
 <!-- Main Content -->
 <div class="container mt-5">
-
-
-    <!-- Remaining Budget Alert -->
-    <div class="alert alert-info text-center">
+    <div class="alert alert-info text-center mt-4">
         <strong>Remaining Budget:</strong> @Model.Amount
     </div>
 
-    <!-- Search Bar -->
     <div class="mb-4">
         <input class="form-control" id="myInput" type="text" placeholder="Search expenses...">
     </div>
 
-    <!-- Expense Table -->
-    <div class="card shadow-sm">
+    <div class="card card-custom">
         <div class="card-body">
-            <table id="myTable" class="table table-bordered table-hover">
-                <thead class="bg-gradient-primary text-blue">
-                    <tr>
-                        <th>Name of Expense</th>
-                        <th>Expense Amount</th>
-                        <th>Currency</th>
-                        <th>Expense Date</th>
-                        <th>Expense Description</th>
-                        <th>Expense Recurrence</th>
-                        <th>Currency</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.ExpensesList != null && Model.ExpensesList.Any())
-                    {
-                        @foreach (var expense in Model.ExpensesList)
+            <div class="table-responsive">
+                <table id="myTable" class="table table-striped table-hover table-bordered">
+                    <thead class="bg-bank-primary">
+                        <tr>
+                            <th>Name of Expense</th>
+                            <th>Expense Amount</th>
+                            <th>Currency</th>
+                            <th>Expense Date</th>
+                            <th>Expense Description</th>
+                            <th>Expense Recurrence</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.ExpensesList != null && Model.ExpensesList.Any())
+                        {
+                            @foreach (var expense in Model.ExpensesList)
+                            {
+                                <tr>
+                                    <td>@expense.ExpenseName</td>
+                                    <td><span id="amount-@expense.ExpenseId">@expense.ExpenseAmount</span></td>
+                                    <td>
+                                        <select class="form-control currency-select" data-id="@expense.ExpenseId" data-amount="@expense.ExpenseAmount">
+                                            <option value="1">USD</option>
+                                            <option value="0.3">KWD</option>
+                                            <option value="3.67">AED</option>
+                                        </select>
+                                    </td>
+                                    <td>@expense.ExpenseDate.ToString("yyyy-MM-dd")</td>
+                                    <td>@expense.ExpenseDescription</td>
+                                    <td>@expense.Recurring</td>
+                                    <td>
+                                        <form method="post" asp-action="Delete" asp-route-expenseId="@expense.ExpenseId" asp-controller="Tracker" onsubmit="return confirm('Are you sure you want to delete this expense?');">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+                        else
                         {
                             <tr>
-                                <td>@expense.ExpenseName</td>
-                                <td>@expense.ExpenseAmount</td>
-                                <td>@expense.Curency</td>
-                                <td>@expense.ExpenseDate.ToString("yyyy-MM-dd")</td>
-                                <td>@expense.ExpenseDescription</td>
-                                <td>@expense.Recurring</td>
-                                <td>@Enum.GetName(typeof(Tracker.Models.ViewModels.EnumsList.Currencies), expense.Curency)</td>
-                                <td>
-                                    <form method="post" asp-action="Delete" asp-route-expenseId="@expense.ExpenseId" asp-controller="Tracker" onsubmit="return confirm('Are you sure you want to delete this expense?');">
-                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                    </form>
-                                </td>
+                                <td colspan="6" class="text-center text-muted">No expenses found.</td>
                             </tr>
                         }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="8" class="text-center text-muted">No expenses found.</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Back Button -->
 <div class="text-center mt-4">
-    <a asp-action="Index" asp-controller="Home" class="btn btn--radius-2 btn--blue">Back to Home</a>
+    <a asp-action="Index" asp-controller="Home" class="btn btn-accent btn-lg">Back to Home</a>
 </div>
 
-<!-- Script for Search Filtering -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
@@ -173,6 +153,14 @@
             $("#myTable tbody tr").filter(function () {
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
             });
+        });
+
+        $(".currency-select").on("change", function () {
+            var selectedRate = $(this).val();
+            var expenseId = $(this).data("id");
+            var originalAmount = $(this).data("amount");
+            var convertedAmount = (originalAmount * selectedRate).toFixed(2);
+            $("#amount-" + expenseId).text(convertedAmount);
         });
     });
 </script>

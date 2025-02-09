@@ -1,6 +1,7 @@
 ﻿using static Tracker.Models.ViewModels.EnumsList;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
 namespace Tracker.Models
 {
@@ -9,6 +10,7 @@ namespace Tracker.Models
         public Guid ExpenseId { get; set; }
 
         [Required(ErrorMessage = "Enter The Name")]
+        [DisplayName("Expense Name")]
         public string ExpenseName { get; set; }
         [Required(ErrorMessage = "Enter The Amount")]
         public decimal ExpenseAmount { get; set; }
