@@ -140,7 +140,7 @@
                                 <td>@expense.Recurring</td>
                                 <td>@Enum.GetName(typeof(Tracker.Models.ViewModels.EnumsList.Currencies), expense.Curency)</td>
                                 <td>
-                                    <form method="post" asp-action="Delete" asp-route-id="@expense.ExpenseId" onsubmit="return confirm('Are you sure you want to delete this expense?');">
+                                    <form method="post" asp-action="Delete" asp-route-expenseId="@expense.ExpenseId" asp-controller="Tracker" onsubmit="return confirm('Are you sure you want to delete this expense?');">
                                         <button type="submit" class="btn btn-danger">Delete</button>
                                     </form>
                                 </td>

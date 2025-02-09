@@ -18,7 +18,7 @@
 </head>
 <body>
 
-	<header class="main-header position-fixed w-100">
+	<header class="main-header w-100">
 		<div class="container">
 			<nav class="navbar navbar-expand-xl py-0">
 				<div class="logo">
@@ -47,11 +47,9 @@
 						}
 					</ul>
 
-					<!-- Right-aligned buttons (Log Out, Register, Log In) -->
 					<div class="d-flex ms-auto align-items-center">
 						@if (signInManager.IsSignedIn(User))
 						{
-							<!-- Log Out button aligned to the right -->
 							<form asp-action="ConfirmLogout" asp-controller="Account" method="post">
 								@* btn-warning btn-hover-secondery text-capitalize *@
 								<input type="submit" class="btn custom3 fw-bold" value="Logout" />
@@ -81,9 +79,9 @@
 	<!------------------------------>
 	<!-- Header End  -->
 	<!------------------------------>
-	<body>
+	<main>
 		@RenderBody();
-	</body>
+	</main>
 	<!------------------------------>
 	<!-----Footer Start------------->
 	<!------------------------------>

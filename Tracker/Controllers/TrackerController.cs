@@ -9,11 +9,13 @@ using Tracker.Models.ViewModels;
 using static Tracker.Models.ViewModels.EnumsList;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace Tracker.Controllers
 {
     public class TrackerController : Controller
     {
+        private DateTime Edate;
         private ApplicationDbContext db;
         private UserManager<ApplicationUser> userManager;
         public TrackerController(ApplicationDbContext _db, UserManager<ApplicationUser> _userManager)
@@ -49,12 +51,56 @@ namespace Tracker.Controllers
                 };
                 db.Expenses.Add(expenses);
                 db.SaveChanges();
-                return RedirectToAction("Index","Home");
+
+                switch (model.Recurrin.ToString())
+                {
+                    case "Daily":
+                        Edate = model.ExpenseDate.AddDays(1);
+                        break;
+                    case "Weekly":
+                        Edate = model.ExpenseDate.AddDays(7);
+                        break;
+                    case "Monthly":
+                        Edate = model.ExpenseDate.AddMonths(1);
+                        break;
+                    case "yearly":
+                        Edate = model.ExpenseDate.AddYears(1);
+                        break;
+                    default:
+                        Edate = model.ExpenseDate;
+                        break;
+                }
+
+                if (model.Recurring)
+                {
+                    Expense recurringExpense = new Expense()
+                    {
+
+                        ExpenseName = model.ExpenseName,
+                        ExpenseAmount = model.ExpenseAmount,
+                        ExpenseDate = Edate, 
+                        Curency = model.Curency,
+                        Categories = model.Categories,
+                        Recurring = model.Recurring,
+                        UserId = userId,
+                        ExpenseDescription = model.ExpenseDescription
+                    };
+
+                    db.Expenses.Add(recurringExpense);
+                    db.SaveChanges();
+                }
+                if (model.Recurring)
+                {
+                    return RedirectToAction("ViewExpense", "Tracker"); 
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
             return View(model);
         }
 
-        //the search action
         public async Task<IActionResult> ViewExpenses(SearchViewModel model)
         {
             var userId = userManager.GetUserId(User);
@@ -63,12 +109,12 @@ namespace Tracker.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var FindExpense = await db.Expenses.Where(Exp => Exp.UserId == userId).ToListAsync(); //change my transaction to the view expenses from mohammad
-            if (model.Amount < 0)  // Allowing 0 to mean "no filter"
+            var FindExpense = await db.Expenses.Where(Exp => Exp.UserId == userId).ToListAsync();
+            if (model.Amount < 0)
             {
                 ModelState.AddModelError(string.Empty, "There’s no such expense with an invalid amount.");
-                return View(new SearchViewModel { ExpensesList = new List<Expense>() }); //again change this to the name of Mohammads view as well
-            }//IMPORTANT NOTE: the view is in my desktop, i will add it later after we finish correcting everything in this action and create the view (adding what mohammad adds)
+                return View(new SearchViewModel { ExpensesList = new List<Expense>() });
+            }
             else if (model.Amount > 0)
             {
                 FindExpense = FindExpense.Where(Exp => Exp.ExpenseAmount == model.Amount).ToList();
@@ -76,9 +122,7 @@ namespace Tracker.Controllers
 
             if (!string.IsNullOrEmpty(model.SearchString))
             {
-                var matchedExpenses = FindExpense
-                    .Where(Exp => Exp.ExpenseName.Contains(model.SearchString) || Exp.ExpenseDescription.Contains(model.SearchString))
-                    .ToList();
+                var matchedExpenses = FindExpense.Where(Exp => Exp.ExpenseName.Contains(model.SearchString)).ToList();
 
                 if (matchedExpenses.Any())
                 {
@@ -102,10 +146,14 @@ namespace Tracker.Controllers
             var search = new SearchViewModel()
             {
                 ExpensesList = FindExpense.OrderByDescending(Exp => Exp.ExpenseDate).ToList()
-            };//to write everything in the view in a descending based on date
+            };
+            var remainingBudget = db.Budget.FirstOrDefault(b => b.UserId == userId)?.RemainingAmount ?? 0;
+
+            model.ExpensesList = search.ExpensesList;
+
+            ViewData["RemainingBudget"] = remainingBudget;
+
             return View(search);
-
-
         }
         public async Task<IActionResult> LatestTransactions()
         {
@@ -127,10 +175,8 @@ namespace Tracker.Controllers
                 return View();
             }
 
-            // Start with all transactions for the current user
             var transactions = db.Expenses.Where(e => e.UserId == user.Id).AsQueryable();
 
-            // Apply filters if they are provided
             if (!string.IsNullOrEmpty(searchString))
             {
                 transactions = transactions.Where(t => t.ExpenseAmount.ToString().Contains(searchString) || t.ExpenseDate.ToString("g").Contains(searchString));
@@ -165,60 +211,33 @@ namespace Tracker.Controllers
             return View(filteredTransactions);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Route("Tracker/Delete/{expenseId:guid}")]
         public async Task<IActionResult> Delete(Guid expenseId)
         {
+
             var expense = await db.Expenses.FindAsync(expenseId);
 
             if (expense == null)
             {
+
                 return NotFound();
             }
 
+
             var user = await userManager.GetUserAsync(User);
-            if (user == null || expense.UserId != user.Id)
+            if (expense.UserId != user.Id)
             {
+
                 return Unauthorized();
             }
 
             db.Expenses.Remove(expense);
+
+
             await db.SaveChangesAsync();
+
 
             return RedirectToAction("ViewExpenses");
         }
 
-        [HttpGet]
-        public IActionResult Deposit()
-        {
-            return View(new DepositViewModel());
-        }
-        [HttpPost]
-        public async Task<IActionResult> Deposit(decimal amount)
-        {
-            if (amount <= 0)
-            {
-                ModelState.AddModelError("", "Invalid deposit amount.");
-                return View();
-            }
-
-            var user = await userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
-            user.Amount += amount; // Assuming "Balance" is a property in your user model
-
-            var result = await userManager.UpdateAsync(user);
-            if (result.Succeeded)
-            {
-                return RedirectToAction("Profile", "Account"); // Ensure Profile action exists
-            }
-
-            ModelState.AddModelError("", "Deposit failed. Try again.");
-            return View();
-
-        }
     }
 }
