@@ -1,5 +1,10 @@
 ﻿@model RegisterViewModel
-
+<style>
+    body {
+        background: url('../assets/images/image7.png') no-repeat center center fixed;
+        background-size: cover;
+    }
+</style>
 <link href="~/assets1/css/oldpro/animate2.min.css" rel="stylesheet" />
 <link href="~/assets1/css/oldpro/backtotop2.css" rel="stylesheet" />
 <link href="~/assets1/css/oldpro/bootstrap2.min.css" rel="stylesheet" />
@@ -14,7 +19,8 @@
 <link href="~/assets1/css/oldpro/swiper-bundle2.css" rel="stylesheet" />
 <link href="~/assets1/css/fontawesome5pro.css" rel="stylesheet" />
 <link href="~/assets1/css/oldpro/fontawesome5pro2.css" rel="stylesheet" />
-<section class="hero-banner position-relative overflow-hidden" style="background-color: #007bff;">
+@* <section class="hero-banner position-relative overflow-hidden" style="background-color: #007bff;"> *@
+    <section>
     <div class="container">
         <div class="row d-flex flex-wrap align-items-center">
             <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -25,10 +31,10 @@
 
             <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                 <div class="position-relative center-hero-color" style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                    <div class="sign__wrapper white-bg" style="width: 100%; padding: 30px; border-radius: 8px; margin-left: -600px;">
+                    <div class="sign__wrapper white-bg cardTrp" style="width: 100%; padding: 30px; border-radius: 8px; margin-left: -600px;">
                         <div class="section__title-wrapper text-center mb-55">
                             <h2 class="section__title">Create a free <br>  Account</h2>
-                            <p>Easily track and manage your expenses.</p>
+                            <p class="text-black">Easily track and manage your expenses.</p>
                         </div>
                         <div class="sign__form">
                             <form asp-action="Register" asp-controller="Account" method="post" enctype="multipart/form-data">
@@ -70,7 +76,7 @@
                                     <h5>Re-Password</h5>
                                     <div class="sign__input">
                                         <input asp-for="ConfirmPassword" placeholder="Re-Password">
-                                        <span asp-validation-for="ConfirmEmail" class="text-danger"></span>
+                                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                                         <i class="fal fa-lock"></i>
                                     </div>
                                 </div>

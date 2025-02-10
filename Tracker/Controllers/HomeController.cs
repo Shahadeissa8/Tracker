@@ -18,6 +18,11 @@ namespace Tracker.Controllers
             return View();
         }
 
+        public IActionResult IndexBeforeRegister()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();

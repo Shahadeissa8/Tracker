@@ -52,7 +52,8 @@ namespace Tracker.Controllers
                 if (result.Succeeded)
                 {
                     await signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Profile", "Account");
+                    //return RedirectToAction("Profile", "Account");
+                    return RedirectToAction("Index", "Home");
                 }
 
                 foreach (var error in result.Errors)

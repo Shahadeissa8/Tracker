@@ -7866,6 +7866,14 @@ p.checkout-coupon input[type=text]:focus {
   box-shadow: 0px 40px 80px 0px rgba(2, 2, 26, 0.14);
   z-index: 11;
 }
+
+.cardTrp {
+    background: rgba(255, 255, 255, 0.2); /* Transparent background */
+    backdrop-filter: blur(10px); /* Blur effect */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
 @media (max-width: 575px) {
   .sign__wrapper {
     margin: 0;
